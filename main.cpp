@@ -13,9 +13,9 @@
 #include "GLTools.h"
 
 // Standard window width
-const int WINDOW_WIDTH  = 640;
+const int WINDOW_WIDTH  = 980;
 // Standard window height
-const int WINDOW_HEIGHT = 480;
+const int WINDOW_HEIGHT = 650;
 // GLUT window id/handle
 int glutID = 0;
 
@@ -24,6 +24,10 @@ cg::GLSLProgram program;
 glm::mat4x4 view;
 glm::mat4x4 projection;
 
+
+float groesseSonne = 0.5;
+float groessePlanet = 0.3;
+float groesseMond = 0.1;
 float zNear = 0.1f;
 float zFar  = 100.0f;
 
@@ -50,47 +54,33 @@ struct Object
 	glm::mat4x4 model;
 };
 
+Object moon1; // Mond 1 Für Planet Grade
+Object moon2; // Mond 2 Für Planet Grade
+Object moon3; // Mond 3 Für Planet Grade
 
-Object triangle;
-Object quad;
-Object sun;
-Object moon;
-Object wireSphere; // GLUT geometry
+Object moon4; // Mond 1 mittig für Planet schief
+Object moon5; // Mond 2 mittig für Planet schief
 
-void renderTriangle()
+Object moon6; // Mond 1 unterhalb Planet schief
+Object moon7; // Mond 2 unterhalb Planet schief
+Object moon8; // Mond 3 unterhalb Planet schief
+Object moon9; // Mond 4 unterhalb Planet schief
+
+Object moon10; // Mond 1 oberhalb Planet schief
+Object moon11; // Mond 2 oberhalb Planet schief
+Object moon12; // Mond 3 oberhalb Planet schief
+Object moon13; // Mond 4 oberhalb Planet schief
+
+
+Object Planetschief;
+Object PlanetGrade;
+Object Sonne; // GLUT geometry
+
+
+void renderWireSphereSonne ()
 {
 	// Create mvp.
-	glm::mat4x4 mvp = projection * view * triangle.model;
-
-	// Bind the shader program and set uniform(s).
-	program.use();
-	program.setUniform("mvp", mvp);
-
-	// Bind vertex array object so we can render the 1 triangle.
-	glBindVertexArray(triangle.vao);
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
-	glBindVertexArray(0);
-}
-
-void renderQuad()
-{
-	// Create mvp.
-	glm::mat4x4 mvp = projection * view * quad.model;
-
-	// Bind the shader program and set uniform(s).
-	program.use();
-	program.setUniform("mvp", mvp);
-	
-	// Bind vertex array object so we can render the 2 triangles.
-	glBindVertexArray(quad.vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-	glBindVertexArray(0);
-}
-
-void renderWireSphere ()
-{
-	// Create mvp.
-	glm::mat4x4 mvp = projection * view * wireSphere.model;
+	glm::mat4x4 mvp = projection * view * Sonne.model;
 	
 	// Bind the shader program and set uniform(s).
 	program.use();
@@ -98,21 +88,21 @@ void renderWireSphere ()
 
 	// GLUT: bind vertex-array-object
 	// this vertex-array-object must be bound before the glutWireSphere call
-	glBindVertexArray(wireSphere.vao);
+	glBindVertexArray(Sonne.vao);
 	
 
     //glLineWidth(1.0f);
-    glutWireSphere(0.5, 250, 250);
+    glutWireSphere(groesseSonne, 250, 250);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
 	glBindVertexArray(0);
 }
 
-void renderWireSphereSun()
+void renderWireSpheremoon1()
 {
 	// Create mvp.
-	glm::mat4x4 mvp = projection * view * sun.model;
+	glm::mat4x4 mvp = projection * view * moon1.model;
 
 	// Bind the shader program and set uniform(s).
 	program.use();
@@ -120,21 +110,21 @@ void renderWireSphereSun()
 
 	// GLUT: bind vertex-array-object
 	// this vertex-array-object must be bound before the glutWireSphere call
-	glBindVertexArray(sun.vao);
+	glBindVertexArray(moon1.vao);
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(1.0, 250, 250);
+	glutWireSphere(groesseMond, 250, 250);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
 	glBindVertexArray(0);
 }
 
-void renderWireSphereMoon()
+void renderWireSpheremoon2()
 {
 	// Create mvp.
-	glm::mat4x4 mvp = projection * view * moon.model;
+	glm::mat4x4 mvp = projection * view * moon2.model;
 
 	// Bind the shader program and set uniform(s).
 	program.use();
@@ -142,111 +132,304 @@ void renderWireSphereMoon()
 
 	// GLUT: bind vertex-array-object
 	// this vertex-array-object must be bound before the glutWireSphere call
-	glBindVertexArray(moon.vao);
+	glBindVertexArray(moon2.vao);
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(1.5, 250, 250);
+	glutWireSphere(groesseMond, 250, 250);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
 	glBindVertexArray(0);
 }
 
-
-void initTriangle()
+void renderWireSpheremoon3()
 {
-	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const std::vector<glm::vec3> vertices = { glm::vec3(-1.0f, 1.0f, 0.0f), glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f) };
-	const std::vector<glm::vec3> colors = { glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f) };
-	const std::vector<GLushort> indices = { 0, 1, 2 };
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon3.model;
 
-	GLuint programId = program.getHandle();
-	GLuint pos;
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
 
-	// Step 0: Create vertex array object.
-	glGenVertexArrays(1, &triangle.vao);
-	glBindVertexArray(triangle.vao);
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon3.vao);
 
-	// Step 1: Create vertex buffer object for position attribute and bind it to the associated "shader attribute".
-	glGenBuffers(1, &triangle.positionBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, triangle.positionBuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
-	// Bind it to position.
-	pos = glGetAttribLocation(programId, "position");
-	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
 
-	// Step 2: Create vertex buffer object for color attribute and bind it to...
-	glGenBuffers(1, &triangle.colorBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, triangle.colorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
-
-	// Bind it to color.
-	pos = glGetAttribLocation(programId, "color");
-	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	// Step 3: Create vertex buffer object for indices. No binding needed here.
-	glGenBuffers(1, &triangle.indexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, triangle.indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
-
-	// Unbind vertex array object (back to default).
+	// GLUT: unbind vertex-array-object
 	glBindVertexArray(0);
-
-	// Modify model matrix.
-	triangle.model = glm::translate(glm::mat4(1.0f), glm::vec3(-1.25f, 0.0f, 0.0f));
 }
 
-void initQuad()
+void renderWireSpheremoon4()
 {
-	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const std::vector<glm::vec3> vertices = { { -1.0f, 1.0f, 0.0f }, { -1.0, -1.0, 0.0 }, { 1.0f, -1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } };
-	const std::vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f }, { 0.0f, 1.0, 1.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f } };
-	const std::vector<GLushort> indices = { 0, 1, 2, 0, 2, 3 };
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon4.model;
 
-	GLuint programId = program.getHandle();
-	GLuint pos;
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
 
-	// Step 0: Create vertex array object.
-	glGenVertexArrays(1, &quad.vao);
-	glBindVertexArray(quad.vao);
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon4.vao);
 
-	// Step 1: Create vertex buffer object for position attribute and bind it to the associated "shader attribute".
-	glGenBuffers(1, &quad.positionBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, quad.positionBuffer);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
-	// Bind it to position.
-	pos = glGetAttribLocation(programId, "position");
-	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
 
-	// Step 2: Create vertex buffer object for color attribute and bind it to...
-	glGenBuffers(1, &quad.colorBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, quad.colorBuffer);
-	glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
-
-	// Bind it to color.
-	pos = glGetAttribLocation(programId, "color");
-	glEnableVertexAttribArray(pos);
-	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	// Step 3: Create vertex buffer object for indices. No binding needed here.
-	glGenBuffers(1, &quad.indexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quad.indexBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
-
-	// Unbind vertex array object (back to default).
+	// GLUT: unbind vertex-array-object
 	glBindVertexArray(0);
-
-	// Modify model matrix.
-	quad.model = glm::translate(glm::mat4(1.0f), glm::vec3(1.25f, 0.0f, 0.0f));
 }
 
-void initWireSphere() 
+void renderWireSpheremoon5()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon5.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon5.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpheremoon6()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon6.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon6.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpheremoon7()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon7.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon7.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpheremoon8()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon8.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon8.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpheremoon9()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon9.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon9.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpheremoon10()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon10.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon10.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpheremoon11()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon11.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon11.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpheremoon12()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon12.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon12.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpheremoon13()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * moon13.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(moon13.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groesseMond, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpherePlanetschief()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * Planetschief.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(Planetschief.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groessePlanet, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void renderWireSpherePlanetgrade()
+{
+	// Create mvp.
+	glm::mat4x4 mvp = projection * view * PlanetGrade.model;
+
+	// Bind the shader program and set uniform(s).
+	program.use();
+	program.setUniform("mvp", mvp);
+
+	// GLUT: bind vertex-array-object
+	// this vertex-array-object must be bound before the glutWireSphere call
+	glBindVertexArray(PlanetGrade.vao);
+
+
+	//glLineWidth(1.0f);
+	glutWireSphere(groessePlanet, 250, 250);
+	//größe, linien vertikal, linien horizontal
+
+	// GLUT: unbind vertex-array-object
+	glBindVertexArray(0);
+}
+
+void initWireSphere() //Planet Sonne im Ursprung
 {
 	// set attribute locations (of shader) for GLUT
 	GLuint programId = program.getHandle();
@@ -256,13 +439,13 @@ void initWireSphere()
 	// this creates a colorful sphere :-)
 	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
 	// create a vertex-array-object for GLUT geometry
-	glGenVertexArrays(1, &wireSphere.vao);
+	glGenVertexArrays(1, &Sonne.vao);
 
 	// Modify model matrix.
-	wireSphere.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0));
+	Sonne.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0));
 }
 
-void initWireSphereSun()
+void initWireSphereSchief() //gekippter Planet der Um die Sonne Rotiert
 {
 	// set attribute locations (of shader) for GLUT
 	GLuint programId = program.getHandle();
@@ -272,15 +455,16 @@ void initWireSphereSun()
 	// this creates a colorful sphere :-)
 	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
 	// create a vertex-array-object for GLUT geometry
-	glGenVertexArrays(1, &sun.vao);
+	glGenVertexArrays(1, &Planetschief.vao);
 	
 	
 	
 	// Modify model matrix.
-	sun.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(sun.model,glm::vec3 (2.0,1.0,0.0));
+	Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(1, 0, 0)); // kippen um 45°
+	Planetschief.model = glm::mat4(1.0f) * glm::translate(Planetschief.model,glm::vec3 (2.0,0.0,0.0));
 }
 
-void initWireSphereMoon()
+void initWireSphereGrade()  // senkrechter Planet der um die Sonne Rotiert
 {
 	// set attribute locations (of shader) for GLUT
 	GLuint programId = program.getHandle();
@@ -290,19 +474,218 @@ void initWireSphereMoon()
 	// this creates a colorful sphere :-)
 	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
 	// create a vertex-array-object for GLUT geometry
-	glGenVertexArrays(1, &moon.vao);
+	glGenVertexArrays(1, &PlanetGrade.vao);
 
 
+
+	// Modify model matrix.sun.model;
+	PlanetGrade.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(PlanetGrade.model, glm::vec3(-3.0, 0.0, 0.0));
+}
+
+void initWireSpheremoon1() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon1.vao);
 
 	// Modify model matrix.
-	moon.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(moon.model, glm::vec3(-2.0, 1.0, 0.0));
+	moon1.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(PlanetGrade.model, glm::vec3(-1.0,0.0,0.0)) ;
 }
+
+void initWireSpheremoon2() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon2.vao);
+
+	// Modify model matrix.
+	moon2.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(PlanetGrade.model, glm::vec3(0.6, 0.0, -0.6));
+}
+
+void initWireSpheremoon3() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon3.vao);
+
+	// Modify model matrix.
+	moon3.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(PlanetGrade.model, glm::vec3(0.6, 0.0, 0.6));
+}
+
+void initWireSpheremoon4() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon4.vao);
+
+	// Modify model matrix.
+	moon4.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(1.0, 0.0, 0.0));
+}
+
+void initWireSpheremoon5() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon5.vao);
+
+	// Modify model matrix.
+	moon5.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(-1.0, 0.0, 0.0));
+}
+
+void initWireSpheremoon6() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon6.vao);
+
+	// Modify model matrix.
+	moon6.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(-1.0, 0.0, 1.0));
+}
+
+void initWireSpheremoon7() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon7.vao);
+
+	// Modify model matrix.
+	moon7.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(1.0, 0.0, 1.0));
+}
+
+void initWireSpheremoon8() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon8.vao);
+
+	// Modify model matrix.
+	moon8.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(0.0, -1.0, 1.0));
+}
+
+void initWireSpheremoon9() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon9.vao);
+
+	// Modify model matrix.
+	moon9.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(0.0, 1.0, 1.0));
+}
+
+void initWireSpheremoon10() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon10.vao);
+
+	// Modify model matrix.
+	moon10.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(-1.0, 0.0, -1.0));
+}
+
+void initWireSpheremoon11() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon11.vao);
+
+	// Modify model matrix.
+	moon11.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(1.0, 0.0, -1.0));
+}
+
+void initWireSpheremoon12() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon12.vao);
+
+	// Modify model matrix.
+	moon12.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(0.0, -1.0, -1.0));
+}
+
+void initWireSpheremoon13() {
+	// set attribute locations (of shader) for GLUT
+	GLuint programId = program.getHandle();
+	// position attribute to variable "position"
+	glutSetVertexAttribCoord3(glGetAttribLocation(programId, "position"));
+	// normal attribute to variable "color"
+	// this creates a colorful sphere :-)
+	glutSetVertexAttribNormal(glGetAttribLocation(programId, "color"));
+	// create a vertex-array-object for GLUT geometry
+	glGenVertexArrays(1, &moon13.vao);
+
+	// Modify model matrix.
+	moon13.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(0.0, 1.0, -1.0));
+}
+
+
 
 /*
  Initialization. Should return true if everything is ok and false if something went wrong.
  */
 bool init()
 {
+	
+
 	// OpenGL: Set "background" color and enable depth testing.
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
@@ -339,8 +722,21 @@ bool init()
 	// GLUT: create vertex-array-object for glut geometry, the "default"
 	// must be bound before the glutWireSphere call
 	initWireSphere();
-	initWireSphereSun();
-	initWireSphereMoon();
+	initWireSphereSchief();
+	initWireSphereGrade();
+	initWireSpheremoon1();
+	initWireSpheremoon2();
+	initWireSpheremoon3();
+	initWireSpheremoon4();
+	initWireSpheremoon5();
+	initWireSpheremoon6();
+	initWireSpheremoon7();
+	initWireSpheremoon8();
+	initWireSpheremoon9();
+	initWireSpheremoon10();
+	initWireSpheremoon11();
+	initWireSpheremoon12();
+	initWireSpheremoon13();
 
 	return true;
 }
@@ -365,9 +761,22 @@ void release()
 
 	//releaseObject(triangle);
 	//releaseObject(quad);
-	releaseObject(wireSphere);
-	releaseObject(sun);
-	releaseObject(moon);
+	releaseObject(Sonne);
+	releaseObject(Planetschief);
+	releaseObject(PlanetGrade);
+	releaseObject(moon1);
+	releaseObject(moon2);
+	releaseObject(moon3);
+	releaseObject(moon4);
+	releaseObject(moon5);
+	releaseObject(moon6);
+	releaseObject(moon7);
+	releaseObject(moon8);
+	releaseObject(moon9);
+	releaseObject(moon10);
+	releaseObject(moon11);
+	releaseObject(moon12);
+	releaseObject(moon13);
 }
 
 /*
@@ -376,16 +785,31 @@ void release()
 void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	renderWireSphere();
-	renderWireSphereSun();
-	renderWireSphereMoon();
+	
+	renderWireSphereSonne();
+	renderWireSpherePlanetschief();
+	renderWireSpherePlanetgrade();
+	renderWireSpheremoon1();
+	renderWireSpheremoon2();
+	renderWireSpheremoon3();
+	renderWireSpheremoon4();
+	renderWireSpheremoon5();
+	renderWireSpheremoon6();
+	renderWireSpheremoon7();
+	renderWireSpheremoon8();
+	renderWireSpheremoon9();
+	renderWireSpheremoon10();
+	renderWireSpheremoon11();
+	renderWireSpheremoon12();
+	renderWireSpheremoon13();
 }
 
 void glutDisplay ()
 {
+	
    GLCODE(render());
    glutSwapBuffers();
+  
 }
 
 /*
@@ -393,6 +817,7 @@ void glutDisplay ()
  */
 void glutResize (int width, int height)
 {
+	
 	// Division by zero is bad...
 	height = height < 1 ? 1 : height;
 	glViewport(0, 0, width, height);
@@ -406,28 +831,97 @@ void glutResize (int width, int height)
  */
 void glutKeyboard (unsigned char keycode, int x, int y)
 {
+	
 	switch (keycode)
 	{
 	case 27: // ESC
 	  glutDestroyWindow ( glutID );
 	  return;
-	  
-	case 'r':
-		wireSphere.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) *wireSphere.model;
+	case 's':	
+		//Planeten
+		Planetschief.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * Planetschief.model;
+		PlanetGrade.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * PlanetGrade.model;
+		//Monde Planet Grade
+		moon1.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon1.model;
+		moon2.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon2.model;
+		moon3.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon3.model;
+		//Monde Planet schief:
+		//untn
+		moon4.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon4.model;
+		moon5.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon5.model;
+		moon6.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon6.model;
+		moon7.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon7.model;
+		//mitte
+		moon8.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon8.model;
+		moon9.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon9.model;
+		//oben
+		moon10.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon10.model;
+		moon11.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon11.model;
+		moon12.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon12.model;
+		moon13.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon13.model;
 		break;
-	case 's':
-		sun.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) *sun.model;
-		moon.model= glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) *moon.model;
+
+	case 't':
+		//Planeten
+		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, 1.0));
+		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, 1.0));
+		Planetschief.model = glm::translate(Planetschief.model, glm::vec3(0.0, -0.7, 0.7));
+		//Monde Planet Grade
+		moon1.model = glm::translate(moon1.model, glm::vec3(0.0, 1.0, 0.0));
+		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, 1.0, 0.0));
+		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, 1.0, 0.0));
+		//Monde Planet schief:
+		//unten
+		moon4.model = glm::translate(moon4.model, glm::vec3(0.0, 0.0,1.0));
+		moon5.model = glm::translate(moon5.model, glm::vec3(0.0, 0.0,1.0));
+		moon6.model = glm::translate(moon6.model, glm::vec3(0.0, 0.0, 1.0));
+		moon7.model = glm::translate(moon7.model, glm::vec3(0.0, 0.0, 1.0));
+		//mitte
+		moon8.model = glm::translate(moon8.model, glm::vec3(0.0,0.0, 1.0));
+		moon9.model = glm::translate(moon9.model, glm::vec3(0.0, 0.0, 1.0));
+		//oben
+		moon10.model = glm::translate(moon10.model, glm::vec3(0.0, 0.0, 1.0));
+		moon11.model = glm::translate(moon11.model, glm::vec3(0.0, 0.0, 1.0));
+		moon12.model = glm::translate(moon12.model, glm::vec3(0.0, 0.0, 1.0));
+		moon13.model = glm::translate(moon13.model, glm::vec3(0.0, 0.0, 1.0));
 		break;
-	case 'x':
-		// do something
+	case 'T':
+		//Planeten
+		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, -1.0));
+		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, -1.0));
+		Planetschief.model = glm::translate(Planetschief.model, glm::vec3(0.0, 0.7, -0.7));
+		//Monde Planet Grade
+		moon1.model = glm::translate(moon1.model, glm::vec3(0.0, -1.0, 0.0));
+		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, -1.0, 0.0));
+		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, -1.0, 0.0));
+		//Monde Planet schief:
+		//unten
+		moon4.model = glm::translate(moon4.model, glm::vec3(0.0,0.0, -1.0));
+		moon5.model = glm::translate(moon5.model, glm::vec3(0.0, 0.0,- 1.0));
+		moon6.model = glm::translate(moon6.model, glm::vec3(0.0, 0.0, -1.0));
+		moon7.model = glm::translate(moon7.model, glm::vec3(0.0, 0.0, -1.0));
+		//mitte
+		moon8.model = glm::translate(moon8.model, glm::vec3(0.0,0.0, -1.0));
+		moon9.model = glm::translate(moon9.model, glm::vec3(0.0, 0.0, -1.0));
+		//oben
+		moon10.model = glm::translate(moon10.model, glm::vec3(0.0, 0.0, -1.0));
+		moon11.model = glm::translate(moon11.model, glm::vec3(0.0, 0.0, -1.0));
+		moon12.model = glm::translate(moon12.model, glm::vec3(0.0, 0.0, -1.0));
+		moon13.model = glm::translate(moon13.model, glm::vec3(0.0, 0.0, -1.0));
 		break;
-	case 'y':
-		// do something
+	case 'l':
+		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, 1.0));
+		moon1.model = glm::translate(moon1.model, glm::vec3(0.0, 1.0, 0.0));
+		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, 1.0, 0.0));
+		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, 1.0, 0.0));
 		break;
-	case 'z':
-		// do something
+	case 'L':
+		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, -1.0));
+		moon1.model = glm::translate(moon1.model, glm::vec3(0.0,-1.0, 0.0));
+		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, -1.0, 0.0));
+		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, -1.0, 0.0));
 		break;
+	
 	}
 	glutPostRedisplay();
 }
@@ -459,7 +953,7 @@ int main(int argc, char** argv)
 	glutReshapeFunc(glutResize);
 	glutDisplayFunc(glutDisplay);
 	//glutIdleFunc   (glutDisplay); // redisplay when idle
-
+	
 	glutKeyboardFunc(glutKeyboard);
 
 	// init vertex-array-objects.
@@ -473,6 +967,7 @@ int main(int argc, char** argv)
 
 	// GLUT: Loop until the user closes the window
 	// rendering & event handling
+	
 	glutMainLoop ();
 
 	// Cleanup everything on termination.
