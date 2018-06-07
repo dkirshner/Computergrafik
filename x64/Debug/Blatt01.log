@@ -1,2 +1,4 @@
 ﻿  main.cpp
+c:\users\hendrik\desktop\computergraphik\blatt01\main.cpp(29): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
+c:\users\hendrik\desktop\computergraphik\blatt01\main.cpp(30): warning C4305: "Initialisierung": Verkürzung von "double" in "float"
   Blatt01.vcxproj -> C:\Users\Hendrik\Desktop\ComputerGraphik\Blatt01\x64\Debug\Blatt01.exe
