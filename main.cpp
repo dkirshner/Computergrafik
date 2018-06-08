@@ -24,7 +24,7 @@ cg::GLSLProgram program;
 glm::mat4x4 view;
 glm::mat4x4 projection;
 
-
+float Linienanzahl = 25;
 float groesseSonne = 0.5;
 float groessePlanet = 0.3;
 float groesseMond = 0.1;
@@ -92,7 +92,7 @@ void renderWireSphereSonne ()
 	
 
     //glLineWidth(1.0f);
-    glutWireSphere(groesseSonne, 250, 250);
+    glutWireSphere(groesseSonne, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -114,7 +114,7 @@ void renderWireSpheremoon1()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -136,7 +136,7 @@ void renderWireSpheremoon2()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -158,7 +158,7 @@ void renderWireSpheremoon3()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -180,7 +180,7 @@ void renderWireSpheremoon4()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -202,7 +202,7 @@ void renderWireSpheremoon5()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -224,7 +224,7 @@ void renderWireSpheremoon6()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -246,7 +246,7 @@ void renderWireSpheremoon7()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -268,7 +268,7 @@ void renderWireSpheremoon8()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -290,7 +290,7 @@ void renderWireSpheremoon9()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -312,7 +312,7 @@ void renderWireSpheremoon10()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -334,7 +334,7 @@ void renderWireSpheremoon11()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -356,7 +356,7 @@ void renderWireSpheremoon12()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -378,7 +378,7 @@ void renderWireSpheremoon13()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groesseMond, 250, 250);
+	glutWireSphere(groesseMond, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -400,7 +400,7 @@ void renderWireSpherePlanetschief()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groessePlanet, 250, 250);
+	glutWireSphere(groessePlanet, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -422,7 +422,7 @@ void renderWireSpherePlanetgrade()
 
 
 	//glLineWidth(1.0f);
-	glutWireSphere(groessePlanet, 250, 250);
+	glutWireSphere(groessePlanet, Linienanzahl, Linienanzahl);
 	//größe, linien vertikal, linien horizontal
 
 	// GLUT: unbind vertex-array-object
@@ -460,7 +460,6 @@ void initWireSphereSchief() //gekippter Planet der Um die Sonne Rotiert
 	
 	
 	// Modify model matrix.
-	Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(1, 0, 0)); // kippen um 45°
 	Planetschief.model = glm::mat4(1.0f) * glm::translate(Planetschief.model,glm::vec3 (2.0,0.0,0.0));
 }
 
@@ -691,7 +690,7 @@ bool init()
 	glEnable(GL_DEPTH_TEST);
 
 	// Construct view matrix.
-	glm::vec3 eye(0.0f, 0.0f, 4.0f);
+	glm::vec3 eye(0.0f, 0.0f, 10.0f);
 	glm::vec3 center(0.0f, 0.0f, 0.0f);
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
 
@@ -737,6 +736,7 @@ bool init()
 	initWireSpheremoon11();
 	initWireSpheremoon12();
 	initWireSpheremoon13();
+	Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(1, 0, 0)); // kippen um 45° von Planetschief
 
 	return true;
 }
@@ -786,6 +786,7 @@ void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
+
 	renderWireSphereSonne();
 	renderWireSpherePlanetschief();
 	renderWireSpherePlanetgrade();
