@@ -838,7 +838,7 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 	case 27: // ESC
 	  glutDestroyWindow ( glutID );
 	  return;
-	case 's':	
+	case 's':	//Rotation des Gesammten Systems
 		//Planeten
 		Planetschief.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * Planetschief.model;
 		PlanetGrade.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * PlanetGrade.model;
@@ -847,7 +847,7 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 		moon2.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon2.model;
 		moon3.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon3.model;
 		//Monde Planet schief:
-		//untn
+		//unten
 		moon4.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon4.model;
 		moon5.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon5.model;
 		moon6.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon6.model;
@@ -862,7 +862,7 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 		moon13.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon13.model;
 		break;
 
-	case 't':
+	case 't': //Bewegung des Gesammten Planetensystems entlang der Y-Achse nach unten
 		//Planeten
 		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, 1.0));
 		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, 1.0));
@@ -873,20 +873,20 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, 1.0, 0.0));
 		//Monde Planet schief:
 		//unten
-		moon4.model = glm::translate(moon4.model, glm::vec3(0.0, 0.0,1.0));
-		moon5.model = glm::translate(moon5.model, glm::vec3(0.0, 0.0,1.0));
-		moon6.model = glm::translate(moon6.model, glm::vec3(0.0, 0.0, 1.0));
-		moon7.model = glm::translate(moon7.model, glm::vec3(0.0, 0.0, 1.0));
+		moon4.model = glm::translate(moon4.model, glm::vec3(0.0, -0.7,0.7));
+		moon5.model = glm::translate(moon5.model, glm::vec3(0.0, -0.7, 0.7));
+		moon6.model = glm::translate(moon6.model, glm::vec3(0.0, -0.7, 0.7));
+		moon7.model = glm::translate(moon7.model, glm::vec3(0.0, -0.7, 0.7));
 		//mitte
-		moon8.model = glm::translate(moon8.model, glm::vec3(0.0,0.0, 1.0));
-		moon9.model = glm::translate(moon9.model, glm::vec3(0.0, 0.0, 1.0));
+		moon8.model = glm::translate(moon8.model, glm::vec3(0.0, -0.7, 0.7));
+		moon9.model = glm::translate(moon9.model, glm::vec3(0.0, -0.7, 0.7));
 		//oben
-		moon10.model = glm::translate(moon10.model, glm::vec3(0.0, 0.0, 1.0));
-		moon11.model = glm::translate(moon11.model, glm::vec3(0.0, 0.0, 1.0));
-		moon12.model = glm::translate(moon12.model, glm::vec3(0.0, 0.0, 1.0));
-		moon13.model = glm::translate(moon13.model, glm::vec3(0.0, 0.0, 1.0));
+		moon10.model = glm::translate(moon10.model, glm::vec3(0.0, -0.7, 0.7));
+		moon11.model = glm::translate(moon11.model, glm::vec3(0.0, -0.7, 0.7));
+		moon12.model = glm::translate(moon12.model, glm::vec3(0.0, -0.7, 0.7));
+		moon13.model = glm::translate(moon13.model, glm::vec3(0.0, -0.7, 0.7));
 		break;
-	case 'T':
+	case 'T': //Bewegung des Gesammten Planetensystems entlang der Y-Achse nach oben
 		//Planeten
 		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, -1.0));
 		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, -1.0));
@@ -897,32 +897,42 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, -1.0, 0.0));
 		//Monde Planet schief:
 		//unten
-		moon4.model = glm::translate(moon4.model, glm::vec3(0.0,0.0, -1.0));
-		moon5.model = glm::translate(moon5.model, glm::vec3(0.0, 0.0,- 1.0));
-		moon6.model = glm::translate(moon6.model, glm::vec3(0.0, 0.0, -1.0));
-		moon7.model = glm::translate(moon7.model, glm::vec3(0.0, 0.0, -1.0));
+		moon4.model = glm::translate(moon4.model, glm::vec3(0.0,0.7, -0.7));
+		moon5.model = glm::translate(moon5.model, glm::vec3(0.0, 0.7, -0.7));
+		moon6.model = glm::translate(moon6.model, glm::vec3(0.0, 0.7, -0.7));
+		moon7.model = glm::translate(moon7.model, glm::vec3(0.0, 0.7, -0.7));
 		//mitte
-		moon8.model = glm::translate(moon8.model, glm::vec3(0.0,0.0, -1.0));
-		moon9.model = glm::translate(moon9.model, glm::vec3(0.0, 0.0, -1.0));
+		moon8.model = glm::translate(moon8.model, glm::vec3(0.0, 0.7, -0.7));
+		moon9.model = glm::translate(moon9.model, glm::vec3(0.0, 0.7, -0.7));
 		//oben
-		moon10.model = glm::translate(moon10.model, glm::vec3(0.0, 0.0, -1.0));
-		moon11.model = glm::translate(moon11.model, glm::vec3(0.0, 0.0, -1.0));
-		moon12.model = glm::translate(moon12.model, glm::vec3(0.0, 0.0, -1.0));
-		moon13.model = glm::translate(moon13.model, glm::vec3(0.0, 0.0, -1.0));
+		moon10.model = glm::translate(moon10.model, glm::vec3(0.0, 0.7, -0.7));
+		moon11.model = glm::translate(moon11.model, glm::vec3(0.0, 0.7, -0.7));
+		moon12.model = glm::translate(moon12.model, glm::vec3(0.0, 0.7, -0.7));
+		moon13.model = glm::translate(moon13.model, glm::vec3(0.0, 0.7, -0.7));
 		break;
-	case 'l':
+	case 'l': //Grader Planet nach unten bewegen
 		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, 1.0));
 		moon1.model = glm::translate(moon1.model, glm::vec3(0.0, 1.0, 0.0));
 		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, 1.0, 0.0));
 		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, 1.0, 0.0));
 		break;
-	case 'L':
+	case 'L': //Grader Planet nach oben bewegen
 		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, -1.0));
 		moon1.model = glm::translate(moon1.model, glm::vec3(0.0,-1.0, 0.0));
 		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, -1.0, 0.0));
 		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, -1.0, 0.0));
 		break;
 	
+/*
+	case 'p':  //Rotation des Schiefen Planeten
+		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(1, 0, 0));
+		break;
+		//bug: nach drehung geht der Planet bei T oder t immer in 45° gekippte X achse des Planeten
+	case 'P': //Rotation des Schiefen Planeten
+		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(1, 0, 0));
+		break;
+
+*/
 	}
 	glutPostRedisplay();
 }
