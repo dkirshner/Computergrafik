@@ -460,7 +460,7 @@ void initWireSphereSchief() //gekippter Planet der Um die Sonne Rotiert
 	
 	
 	// Modify model matrix.
-	Planetschief.model = glm::mat4(1.0f) * glm::translate(Planetschief.model,glm::vec3 (2.0,0.0,0.0));
+	Planetschief.model = glm::mat4(1.0f) * glm::translate(Planetschief.model,glm::vec3 (-3.0,0.0,0.0));
 }
 
 void initWireSphereGrade()  // senkrechter Planet der um die Sonne Rotiert
@@ -478,7 +478,7 @@ void initWireSphereGrade()  // senkrechter Planet der um die Sonne Rotiert
 
 
 	// Modify model matrix.sun.model;
-	PlanetGrade.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(PlanetGrade.model, glm::vec3(-3.0, 0.0, 0.0));
+	PlanetGrade.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(PlanetGrade.model, glm::vec3(2.0, 0.0, 0.0));
 }
 
 void initWireSpheremoon1() {
