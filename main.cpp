@@ -24,7 +24,7 @@ cg::GLSLProgram program;
 glm::mat4x4 view;
 glm::mat4x4 projection;
 
-float Linienanzahl = 25;
+float Linienanzahl = 10;
 float groesseSonne = 0.5;
 float groessePlanet = 0.3;
 float groesseMond = 0.1;
@@ -75,6 +75,7 @@ Object moon13; // Mond 4 oberhalb Planet schief
 Object Planetschief;
 Object PlanetGrade;
 Object Sonne; // GLUT geometry
+
 
 
 void renderWireSphereSonne ()
@@ -460,7 +461,7 @@ void initWireSphereSchief() //gekippter Planet der Um die Sonne Rotiert
 	
 	
 	// Modify model matrix.
-	Planetschief.model = glm::mat4(1.0f) * glm::translate(Planetschief.model,glm::vec3 (-3.0,0.0,0.0));
+	Planetschief.model = glm::mat4(1.0f) * glm::translate(Planetschief.model,glm::vec3 (-6.0,0.0,0.0));
 }
 
 void initWireSphereGrade()  // senkrechter Planet der um die Sonne Rotiert
@@ -476,9 +477,8 @@ void initWireSphereGrade()  // senkrechter Planet der um die Sonne Rotiert
 	glGenVertexArrays(1, &PlanetGrade.vao);
 
 
-
 	// Modify model matrix.sun.model;
-	PlanetGrade.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(PlanetGrade.model, glm::vec3(2.0, 0.0, 0.0));
+	PlanetGrade.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(PlanetGrade.model, glm::vec3(4.0, 0.0, 0.0));
 }
 
 void initWireSpheremoon1() {
@@ -676,7 +676,33 @@ void initWireSpheremoon13() {
 	moon13.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(0.0, 1.0, -1.0));
 }
 
+void rotate()
+{
+	//Rotation des Gesammten Systems
+	//Planeten
+	Planetschief.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * Planetschief.model;
+	PlanetGrade.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * PlanetGrade.model;
+	//Monde Planet Grade
+	moon1.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon1.model;
+	moon2.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon2.model;
+	moon3.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon3.model;
+	//Monde Planet schief:
+	//unten
+	moon4.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon4.model;
+	moon5.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon5.model;
+	moon6.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon6.model;
+	moon7.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon7.model;
+	//mitte
+	moon8.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon8.model;
+	moon9.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon9.model;
+	//oben
+	moon10.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon10.model;
+	moon11.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon11.model;
+	moon12.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon12.model;
+	moon13.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon13.model;
 
+	glutPostRedisplay();
+}
 
 /*
  Initialization. Should return true if everything is ok and false if something went wrong.
@@ -810,6 +836,7 @@ void glutDisplay ()
 	
    GLCODE(render());
    glutSwapBuffers();
+   rotate();
   
 }
 
@@ -923,7 +950,7 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, -1.0, 0.0));
 		break;
 	
-/*
+
 	case 'p':  //Rotation des Schiefen Planeten
 		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(1, 0, 0));
 		break;
@@ -932,7 +959,7 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(1, 0, 0));
 		break;
 
-*/
+
 	}
 	glutPostRedisplay();
 }
@@ -963,7 +990,7 @@ int main(int argc, char** argv)
 	// GLUT: Set callbacks for events.
 	glutReshapeFunc(glutResize);
 	glutDisplayFunc(glutDisplay);
-	//glutIdleFunc   (glutDisplay); // redisplay when idle
+	glutIdleFunc(glutDisplay); // redisplay when idle
 	
 	glutKeyboardFunc(glutKeyboard);
 
