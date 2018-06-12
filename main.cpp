@@ -538,7 +538,7 @@ void initWireSpheremoon4() {
 	glGenVertexArrays(1, &moon4.vao);
 
 	// Modify model matrix.
-	moon4.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(1.0, 0.0, 0.0));
+	moon4.model = glm::mat4(1.0f)  * glm::translate(Planetschief.model, glm::vec3(1.0, 0.0, 0.0));
 }
 
 void initWireSpheremoon5() {
@@ -553,7 +553,7 @@ void initWireSpheremoon5() {
 	glGenVertexArrays(1, &moon5.vao);
 
 	// Modify model matrix.
-	moon5.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(-1.0, 0.0, 0.0));
+	moon5.model = glm::mat4(1.0f) * glm::translate(Planetschief.model, glm::vec3(-1.0, 0.0, 0.0));
 }
 
 void initWireSpheremoon6() {
@@ -568,7 +568,7 @@ void initWireSpheremoon6() {
 	glGenVertexArrays(1, &moon6.vao);
 
 	// Modify model matrix.
-	moon6.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(-1.0, 0.0, 1.0));
+	moon6.model = glm::mat4(1.0f) * glm::translate(Planetschief.model, glm::vec3(-1.0, 0.0, 1.0));
 }
 
 void initWireSpheremoon7() {
@@ -583,7 +583,7 @@ void initWireSpheremoon7() {
 	glGenVertexArrays(1, &moon7.vao);
 
 	// Modify model matrix.
-	moon7.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(1.0, 0.0, 1.0));
+	moon7.model = glm::mat4(1.0f) * glm::translate(Planetschief.model, glm::vec3(1.0, 0.0, 1.0));
 }
 
 void initWireSpheremoon8() {
@@ -598,7 +598,7 @@ void initWireSpheremoon8() {
 	glGenVertexArrays(1, &moon8.vao);
 
 	// Modify model matrix.
-	moon8.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(0.0, -1.0, 1.0));
+	moon8.model = glm::mat4(1.0f) * glm::translate(Planetschief.model, glm::vec3(0.0, -1.0, 1.0));
 }
 
 void initWireSpheremoon9() {
@@ -613,7 +613,7 @@ void initWireSpheremoon9() {
 	glGenVertexArrays(1, &moon9.vao);
 
 	// Modify model matrix.
-	moon9.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(0.0, 1.0, 1.0));
+	moon9.model = glm::mat4(1.0f) * glm::translate(Planetschief.model, glm::vec3(0.0, 1.0, 1.0));
 }
 
 void initWireSpheremoon10() {
@@ -628,7 +628,7 @@ void initWireSpheremoon10() {
 	glGenVertexArrays(1, &moon10.vao);
 
 	// Modify model matrix.
-	moon10.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(-1.0, 0.0, -1.0));
+	moon10.model = glm::mat4(1.0f) * glm::translate(Planetschief.model, glm::vec3(-1.0, 0.0, -1.0));
 }
 
 void initWireSpheremoon11() {
@@ -643,7 +643,7 @@ void initWireSpheremoon11() {
 	glGenVertexArrays(1, &moon11.vao);
 
 	// Modify model matrix.
-	moon11.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(1.0, 0.0, -1.0));
+	moon11.model = glm::mat4(1.0f) * glm::translate(Planetschief.model, glm::vec3(1.0, 0.0, -1.0));
 }
 
 void initWireSpheremoon12() {
@@ -658,7 +658,7 @@ void initWireSpheremoon12() {
 	glGenVertexArrays(1, &moon12.vao);
 
 	// Modify model matrix.
-	moon12.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(0.0, -1.0, -1.0));
+	moon12.model = glm::mat4(1.0f) * glm::translate(Planetschief.model, glm::vec3(0.0, -1.0, -1.0));
 }
 
 void initWireSpheremoon13() {
@@ -673,7 +673,7 @@ void initWireSpheremoon13() {
 	glGenVertexArrays(1, &moon13.vao);
 
 	// Modify model matrix.
-	moon13.model = glm::mat4(1.0f) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(1, 0, 0)) * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)) * glm::translate(Planetschief.model, glm::vec3(0.0, 1.0, -1.0));
+	moon13.model = glm::mat4(1.0f) * glm::translate(Planetschief.model, glm::vec3(0.0, 1.0, -1.0));
 }
 
 void rotate()
@@ -749,6 +749,7 @@ bool init()
 	// must be bound before the glutWireSphere call
 	initWireSphere();
 	initWireSphereSchief();
+	Planetschief.model = Planetschief.model * glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(1, 0, 0)); // kippen um 45° von Planetschief
 	initWireSphereGrade();
 	initWireSpheremoon1();
 	initWireSpheremoon2();
@@ -763,7 +764,6 @@ bool init()
 	initWireSpheremoon11();
 	initWireSpheremoon12();
 	initWireSpheremoon13();
-	Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(1, 0, 0)); // kippen um 45° von Planetschief
 
 	return true;
 }
@@ -867,6 +867,10 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 	  glutDestroyWindow ( glutID );
 	  return;
 
+	case 's':
+		rotate();
+		break;
+
 	case 't': //Bewegung des Gesammten Planetensystems entlang der Y-Achse nach unten
 		//Planeten
 		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, 1.0));
@@ -930,15 +934,32 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 	
 
 	case 'p':  //Rotation des Schiefen Planeten
-
+	
 		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(1, 0, 0));
-		
+		initWireSpheremoon4(); 
+		initWireSpheremoon5(); 
+		initWireSpheremoon6(); 
+		initWireSpheremoon7(); 
+		initWireSpheremoon8(); 
+		initWireSpheremoon9(); 
+		initWireSpheremoon10(); 
+		initWireSpheremoon11(); 
+		initWireSpheremoon12(); 
+		initWireSpheremoon13();
 		break;
 		//bug: nach drehung geht der Planet bei T oder t immer in 45° gekippte X achse des Planeten
 	case 'P': //Rotation des Schiefen Planeten
-
 		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(1, 0, 0));
-
+		initWireSpheremoon4();
+		initWireSpheremoon5();
+		initWireSpheremoon6();
+		initWireSpheremoon7();
+		initWireSpheremoon8();
+		initWireSpheremoon9();
+		initWireSpheremoon10();
+		initWireSpheremoon11();
+		initWireSpheremoon12();
+		initWireSpheremoon13();
 		break;
 
 
