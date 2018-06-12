@@ -678,28 +678,29 @@ void initWireSpheremoon13() {
 
 void rotate()
 {
+	float rotationsWinkel = 0.5;
 	//Rotation des Gesammten Systems
 	//Planeten
-	Planetschief.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * Planetschief.model;
-	PlanetGrade.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * PlanetGrade.model;
+	Planetschief.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * Planetschief.model;
+	PlanetGrade.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * PlanetGrade.model;
 	//Monde Planet Grade
-	moon1.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon1.model;
-	moon2.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon2.model;
-	moon3.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon3.model;
+	moon1.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon1.model;
+	moon2.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon2.model;
+	moon3.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon3.model;
 	//Monde Planet schief:
 	//unten
-	moon4.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon4.model;
-	moon5.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon5.model;
-	moon6.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon6.model;
-	moon7.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon7.model;
+	moon4.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon4.model;
+	moon5.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon5.model;
+	moon6.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon6.model;
+	moon7.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon7.model;
 	//mitte
-	moon8.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon8.model;
-	moon9.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon9.model;
+	moon8.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon8.model;
+	moon9.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon9.model;
 	//oben
-	moon10.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon10.model;
-	moon11.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon11.model;
-	moon12.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon12.model;
-	moon13.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon13.model;
+	moon10.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon10.model;
+	moon11.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon11.model;
+	moon12.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon12.model;
+	moon13.model = glm::rotate(glm::mat4(1.0f), glm::radians(rotationsWinkel), glm::vec3(0, 1, 0)) * moon13.model;
 
 	glutPostRedisplay();
 }
@@ -865,29 +866,6 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 	case 27: // ESC
 	  glutDestroyWindow ( glutID );
 	  return;
-	case 's':	//Rotation des Gesammten Systems
-		//Planeten
-		Planetschief.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * Planetschief.model;
-		PlanetGrade.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * PlanetGrade.model;
-		//Monde Planet Grade
-		moon1.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon1.model;
-		moon2.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon2.model;
-		moon3.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon3.model;
-		//Monde Planet schief:
-		//unten
-		moon4.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon4.model;
-		moon5.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon5.model;
-		moon6.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon6.model;
-		moon7.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon7.model;
-		//mitte
-		moon8.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon8.model;
-		moon9.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon9.model;
-		//oben
-		moon10.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon10.model;
-		moon11.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon11.model;
-		moon12.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon12.model;
-		moon13.model = glm::rotate(glm::mat4(1.0f), glm::radians(1.0f), glm::vec3(0, 1, 0)) * moon13.model;
-		break;
 
 	case 't': //Bewegung des Gesammten Planetensystems entlang der Y-Achse nach unten
 		//Planeten
@@ -952,11 +930,15 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 	
 
 	case 'p':  //Rotation des Schiefen Planeten
+
 		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(1, 0, 0));
+		
 		break;
 		//bug: nach drehung geht der Planet bei T oder t immer in 45° gekippte X achse des Planeten
 	case 'P': //Rotation des Schiefen Planeten
+
 		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(1, 0, 0));
+
 		break;
 
 
