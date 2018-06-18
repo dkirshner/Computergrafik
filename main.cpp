@@ -23,15 +23,15 @@ cg::GLSLProgram program;
 
 glm::mat4x4 view;
 glm::mat4x4 projection;
-
+int zoomstufe = 4;
 float Linienanzahl = 10;
-float groesseSonne = 1.0;
+float groesseSonne = 0.5;
 float groessePlanet = 0.3;
 float groesseMond = 0.1;
 float zNear = 0.1f;
 float zFar  = 100.0f;
 
-float iVelocity = -0.1f;
+float iVelocity = 0.1f;
 
 /*
 Struct to hold data for object rendering.
@@ -111,7 +111,6 @@ void renderY_AxisMoon()
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
 	glBindVertexArray(0);
 }
-
 
 void renderY_AxisMoonSlope()
 {
@@ -526,7 +525,6 @@ void initY_AxisSun()
 	Y_AxisSun.model = glm::translate(glm::mat4(1.0f), glm::vec3(-0.07f, 0.0f, 0.0f));
 }
 
-
 void initY_AxisMoon()
 {
 	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
@@ -898,9 +896,9 @@ void rotate()
 	initWireSpheremoon2();
 	initWireSpheremoon3();
 
-
+	/*
 	//Rotation um den gekippten Planeten.
-	Planetschief.model = glm::rotate(Planetschief.model, glm::radians(0.5f), glm::vec3(0.0f, 0.0f, 1.0f));
+	Planetschief.model = glm::rotate(Planetschief.model, glm::radians(0.5f), glm::vec3(0.0f, 0.0f, 1.0f));*/
 	initWireSpheremoon4();
 	initWireSpheremoon5();
 	initWireSpheremoon6(); 
@@ -911,9 +909,7 @@ void rotate()
 	initWireSpheremoon11();
 	initWireSpheremoon12();
 	initWireSpheremoon13();
-
-
-
+	
 	initY_AxisMoon();
 	initY_AxisMoonSlope();
 
@@ -957,9 +953,7 @@ bool init()
 
 	// Create all objects.
 
-	initY_AxisSun();
-	initY_AxisMoon();
-	initY_AxisMoonSlope();
+	
 
 
 	// GLUT: create vertex-array-object for glut geometry, the "default"
@@ -967,7 +961,7 @@ bool init()
 
 	initWireSphere();
 	initWireSphereSchief();
-	Planetschief.model = Planetschief.model * glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1, 0, 0)); // kippen um 45° von Planetschief
+	Planetschief.model = Planetschief.model * glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), glm::vec3(1, 0, 0)); // kippen um 45° von Planetschief
 	initWireSphereGrade();
 	initWireSpheremoon1();
 	initWireSpheremoon2();
@@ -983,6 +977,10 @@ bool init()
 	initWireSpheremoon12();
 	initWireSpheremoon13();
 
+
+	initY_AxisSun();
+	initY_AxisMoon();
+	initY_AxisMoonSlope();
 	return true;
 }
 
@@ -1094,7 +1092,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 	case 't': //Bewegung des Gesammten Planetensystems entlang der Y-Achse nach unten
 				//Planeten
 		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, 1.0));
-		Y_AxisSun.model = glm::translate(Y_AxisSun.model, glm::vec3(0.0, 0.0, 1.0));
+		Y_AxisSun.model = glm::translate(Y_AxisSun.model, glm::vec3(0.0, -1.0, 0.0));
 		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, 1.0));
 		Planetschief.model = glm::translate(Planetschief.model, glm::vec3(0.0, -0.7, 0.7));
 		//Monde Planet Grade
@@ -1121,7 +1119,7 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 	case 'T': //Bewegung des Gesammten Planetensystems entlang der Y-Achse nach oben
 				//Planeten
 		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, -1.0));
-		Y_AxisSun.model = glm::translate(Y_AxisSun.model, glm::vec3(0.0, 0.0, -1.0));
+		Y_AxisSun.model = glm::translate(Y_AxisSun.model, glm::vec3(0.0, 1.0, 0.0));
 		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, -1.0));
 		Planetschief.model = glm::translate(Planetschief.model, glm::vec3(0.0, 0.7, -0.7));
 		//Monde Planet Grade
@@ -1165,31 +1163,27 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 	case 'p':  //Rotation des Schiefen Planeten 
 		
 			Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(1, 0, 0));
-		 	initWireSpheremoon4();
-		 	initWireSpheremoon5();
-		 	initWireSpheremoon6();
-			initWireSpheremoon7();
-		 	initWireSpheremoon8();
-		 	initWireSpheremoon9();
-		 	initWireSpheremoon10();
-		 	initWireSpheremoon11();
-		 	initWireSpheremoon12();
-		 	initWireSpheremoon13();
+		 	
 			break;
 		 	//bug: nach drehung geht der Planet bei T oder t immer in 45° gekippte X achse des Planeten 
 	 	case 'P': //Rotation des Schiefen Planeten 
 	 		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(1, 0, 0));
-	 		initWireSpheremoon4();
-	 		initWireSpheremoon5();
-	 		initWireSpheremoon6();
-	 		initWireSpheremoon7();
-	 		initWireSpheremoon8();
-	 		initWireSpheremoon9();
-	 		initWireSpheremoon10();
-	 		initWireSpheremoon11();
-	 		initWireSpheremoon12();
-	 		initWireSpheremoon13();
+	 		
 	 		break;
+
+		case '+': //Zoom in to Sun
+			if (zoomstufe > 0) {
+				view = glm::translate(view, glm::vec3(0.0, 0.0, 0.5));
+				zoomstufe--;
+			}
+			
+			break;
+		case '-': //Zoom out of Sun
+			if (zoomstufe < 10) {
+				view = glm::translate(view, glm::vec3(0.0, 0.0, -0.5));
+				zoomstufe++;
+			}
+			break;
 	}
 	glutPostRedisplay();
 }
