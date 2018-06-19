@@ -896,9 +896,9 @@ void rotate()
 	initWireSpheremoon2();
 	initWireSpheremoon3();
 
-	/*
+	
 	//Rotation um den gekippten Planeten.
-	Planetschief.model = glm::rotate(Planetschief.model, glm::radians(0.5f), glm::vec3(0.0f, 0.0f, 1.0f));*/
+	Planetschief.model = glm::rotate(Planetschief.model, glm::radians(0.5f), glm::vec3(0.0f, 0.0f, 1.0f));
 	initWireSpheremoon4();
 	initWireSpheremoon5();
 	initWireSpheremoon6(); 
@@ -952,10 +952,6 @@ bool init()
 	}
 
 	// Create all objects.
-
-	
-
-
 	// GLUT: create vertex-array-object for glut geometry, the "default"
 	// must be bound before the glutWireSphere call
 
