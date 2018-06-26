@@ -11,6 +11,8 @@
 
 #include "GLSLProgram.h"
 #include "GLTools.h"
+//#include "HE.cpp"
+
 
 // Standard window width
 const int WINDOW_WIDTH = 980;
@@ -18,8 +20,10 @@ const int WINDOW_WIDTH = 980;
 const int WINDOW_HEIGHT = 650;
 // GLUT window id/handle
 int glutID = 0;
-
 cg::GLSLProgram program;
+
+
+
 
 glm::mat4x4 view;
 glm::mat4x4 projection;
@@ -922,7 +926,7 @@ void rotate()
 bool init()
 {
 	// OpenGL: Set "background" color and enable depth testing.
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 
 	// Construct view matrix.
@@ -973,6 +977,7 @@ bool init()
 	initWireSpheremoon12();
 	initWireSpheremoon13();
 
+	
 
 	initY_AxisSun();
 	initY_AxisMoon();
@@ -1047,8 +1052,9 @@ void render()
 	renderWireSpheremoon11();
 	renderWireSpheremoon12();
 	renderWireSpheremoon13();
-}
 
+
+}
 
 /*
  Resize callback.
@@ -1081,10 +1087,10 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 		break;
 
 	case 'W':	//Rotation des Gesammten Systems beschleunigen
-		if(iVelocity < 0.7)
+		if(iVelocity < 1.0)
 			iVelocity += 0.1;
-
 		break;
+
 	case 't': //Bewegung des Gesammten Planetensystems entlang der Y-Achse nach unten
 				//Planeten
 		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, 1.0));
@@ -1157,29 +1163,25 @@ void glutKeyboard(unsigned char keycode, int x, int y)
 
 
 	case 'p':  //Rotation des Schiefen Planeten 
-		
-			Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(1, 0, 0));
-		 	
-			break;
-		 	//bug: nach drehung geht der Planet bei T oder t immer in 45° gekippte X achse des Planeten 
-	 	case 'P': //Rotation des Schiefen Planeten 
-	 		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(1, 0, 0));
-	 		
-	 		break;
+		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(1, 0, 0));	
+		break;
+		//bug: nach drehung geht der Planet bei T oder t immer in 45° gekippte X achse des Planeten 
+	 case 'P': //Rotation des Schiefen Planeten 
+	 	Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(1, 0, 0));	
+	 	break;
 
-		case '+': //Zoom in to Sun
-			if (zoomstufe > 0) {
-				view = glm::translate(view, glm::vec3(0.0, 0.0, 0.5));
-				zoomstufe--;
-			}
-			
-			break;
-		case '-': //Zoom out of Sun
-			if (zoomstufe < 10) {
-				view = glm::translate(view, glm::vec3(0.0, 0.0, -0.5));
-				zoomstufe++;
-			}
-			break;
+	case '+': //Zoom in to Sun
+		if (zoomstufe > 0) {
+			view = glm::translate(view, glm::vec3(0.0, 0.0, 0.5));
+			zoomstufe--;
+		}		
+		break;
+	case '-': //Zoom out of Sun
+		if (zoomstufe < 10) {
+			view = glm::translate(view, glm::vec3(0.0, 0.0, -0.5));
+			zoomstufe++;
+		}
+		break;
 	}
 	glutPostRedisplay();
 }
@@ -1240,4 +1242,3 @@ int main(int argc, char** argv)
 
 	return 0;
 }
-
