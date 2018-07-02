@@ -1,34 +1,17 @@
 #include <iostream>
-#include <vector>
 
 #include <GL/glew.h>
 //#include <GL/gl.h> // OpenGL header not necessary, included by GLEW
 #include <GL/freeglut.h>
 
-#include <glm/glm.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
 #include "GLSLProgram.h"
 #include "GLTools.h"
+#include "HE.h"
 
-class HalfEdge {
-	struct HE_edge {
-		struct HE_vert* vert;
-		struct HE_edge* pair;
-		struct HE_face* face;
-		struct HE_edge* next;
-	};
-	struct HE_vert {
-		float x;
-		float y;
-		float z;
-		HE_edge* edge;
-	};
-	struct HE_face {
-		HE_edge* edge;
-	};
-};
 
 // Standard window width
 const int WINDOW_WIDTH = 980;
