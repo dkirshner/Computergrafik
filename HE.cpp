@@ -1,8 +1,8 @@
 struct HE_edge {
-	HE_vert* vert;
-	HE_edge* pair;
-	HE_face* face;
-	HE_edge* next;
+	struct HE_vert* vert;
+	struct HE_edge* pair;
+	struct HE_face* face;
+	struct HE_edge* next;
 };
 struct HE_vert {
 	float x;
@@ -14,6 +14,3 @@ struct HE_face {
 	HE_edge* edge;
 };
 
-void initobj() {
-
-};

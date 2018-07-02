@@ -11,8 +11,24 @@
 
 #include "GLSLProgram.h"
 #include "GLTools.h"
-//#include "HE.cpp"
 
+class HalfEdge {
+	struct HE_edge {
+		struct HE_vert* vert;
+		struct HE_edge* pair;
+		struct HE_face* face;
+		struct HE_edge* next;
+	};
+	struct HE_vert {
+		float x;
+		float y;
+		float z;
+		HE_edge* edge;
+	};
+	struct HE_face {
+		HE_edge* edge;
+	};
+};
 
 // Standard window width
 const int WINDOW_WIDTH = 980;
@@ -21,9 +37,6 @@ const int WINDOW_HEIGHT = 650;
 // GLUT window id/handle
 int glutID = 0;
 cg::GLSLProgram program;
-
-
-
 
 glm::mat4x4 view;
 glm::mat4x4 projection;

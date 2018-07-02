@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClCompile Include="GLSLProgram.cpp" />
     <ClCompile Include="GraphicObject.cpp" />
+    <ClCompile Include="HE.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +177,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shader\shaded.frag" />
+    <None Include="shader\shaded.vert" />
     <None Include="shader\simple.frag" />
     <None Include="shader\simple.vert" />
   </ItemGroup>
