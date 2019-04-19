@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 
 #include <GL/glew.h>
@@ -76,11 +76,11 @@ void renderQuad()
   glBindVertexArray(0);
 }
 
-void initQuad()
+void initQuad(float RotAnteil, float GruenAnteil, float BlauAnteil)
 {
   // Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
   const std::vector<glm::vec3> vertices = { { -1.0f, 1.0f, 0.0f }, { -1.0, -1.0, 0.0 }, { 1.0f, -1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f } };
-  const std::vector<glm::vec3> colors   = { { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0, 1.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f } };
+  const std::vector<glm::vec3> colors   = { {RotAnteil, GruenAnteil, BlauAnteil}, {RotAnteil, GruenAnteil, BlauAnteil }, { RotAnteil, GruenAnteil, BlauAnteil }, { RotAnteil, GruenAnteil, BlauAnteil } };
   const std::vector<GLushort>  indices  = { 0, 1, 2, 0, 2, 3 };
 
   GLuint programId = program.getHandle();
@@ -125,7 +125,7 @@ void initQuad()
 /*
  Initialization. Should return true if everything is ok and false if something went wrong.
  */
-bool init()
+bool init(float r, float g, float b)
 {
   // OpenGL: Set "background" color and enable depth testing.
   glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
@@ -155,7 +155,7 @@ bool init()
   }
 
   // Create all objects.
-  initQuad();
+  initQuad(r,g,b);
   
   return true;
 }
@@ -263,10 +263,164 @@ int main(int argc, char** argv)
   
   // init vertex-array-objects.
 
+  float r = 1.0f;
+  float g = 0.0f;
+  float b = 0.0f;
 
+  float c = 1.0f-r;
+  float m = 1.0f-g;
+  float y = 1.0f-b;
+
+  int h = 1;
+  float s = 0.0f;
+  float v = 0.0f;
   //Eingabefunktion
 
-  bool result = init();   
+  std::cout << "Bitte Farbmodell waehlen: RGB, CMY, HSV";
+  std::string eingabe = "";
+  std::cin >> eingabe;
+
+  bool farb = true;
+  int farbwert = 0;
+
+  while (farbwert==0) {
+	  if (eingabe == "RGB" || eingabe == "rgb") {
+		 farbwert = 1;
+	  }
+	  else if (eingabe == "CMY" || eingabe == "cmy") {
+		 farbwert = 2;
+	  }
+	  else if(eingabe =="HSV"||eingabe == "hsv"){  
+		farbwert = 3;
+	  }
+	  else {
+		  std::cout << "Falsche eingabe";
+	  }
+  }
+  while (farb) {
+	  switch (farbwert) {
+	  case 1://RGB
+		  std::cout << "Bitte geben sie den Wert fuer Rot an: (Werteberreich 0-255)";
+		  std::cin >> r;
+		  std::cout << "Bitte geben sie den Wert fuer Gruen an: (Werteberreich 0-255)";
+		  std::cin >> g;
+		  std::cout << "Bitte geben sie den Wert fuer Blau an: (Werteberreich 0-255)";
+		  std::cin >> b;
+
+		  if (r < 0 && r > 255) {
+			  std::cout << "Eingabe nur 0-255.";
+		  }
+		  else if (g < 0 && g > 255) {
+			  std::cout << "Eingabe nur 0-255.";
+		  }
+		  else if (b < 0 && b > 255) {
+			  std::cout << "Eingabe nur 0-255.";
+		  }
+		  else {
+			  farb = false;
+		  }
+
+		  //C=1.0−R M=1.0−G Y=1.0−B  RGB -> CMY
+
+		  c = 255 - r;
+		  m = 255 - g;
+		  y = 255 - b;
+
+
+		  break;
+
+	  case 2://CMY
+		  std::cout << "Bitte geben sie den Wert fuer Cyan an: (Werteberreich 0-255)";
+		  std::cin >> c;
+		  std::cout << "Bitte geben sie den Wert fuer Magenta an: (Werteberreich 0-255)";
+		  std::cin >> m;
+		  std::cout << "Bitte geben sie den Wert fuer Gelb an: (Werteberreich 0-255)";
+		  std::cin >> y;
+
+		  if (c < 0 && c > 255) {
+			  std::cout << "Eingabe nur 0-255.";
+		  }
+		  else if (m < 0 && m > 255) {
+			  std::cout << "Eingabe nur 0-255.";
+		  }
+		  else if (y < 0 && y > 255) {
+			  std::cout << "Eingabe nur 0-255.";
+		  }
+		  else {
+			  farb = false;
+		  }
+
+
+		  r = 255 - c;
+		  g = 255 - m;
+		  b = 255 - y;
+
+
+		  break;
+
+	  case 3://HSV
+		  std::cout << "Bitte geben sie den Wert fuer Hue an: (Werteberreich 0-359)";
+		  std::cin >> h;
+		  std::cout << "Bitte geben sie den Wert fuer Satturation an: (Werteberreich 0-100)";
+		  std::cin >> s;
+		  std::cout << "Bitte geben sie den Wert fuer Value an: (Werteberreich 0-100)";
+		  std::cin >> v;
+
+		  if (h < 0 && h > 359) {
+			  std::cout << "Eingabe Hue nur 0-359.";
+		  }
+		  else if (s < 0 && s > 100) {
+			  std::cout << "Eingabe nur 0-100.";
+		  }
+		  else if (v < 0 && v > 100) {
+			  std::cout << "Eingabe nur 0-100.";
+		  }
+		  else {
+			  farb = false;
+		  }
+		  break;
+
+	  default://Fehler
+		  std::cout << "Fehler im Programm, abbruch.";
+			  farb = false;
+		  break;
+
+	  }
+
+  }
+ 
+ 
+
+
+  //R=1.0−C	G=1.0−M B=1.0−Y  CMY -> RGB
+
+
+  std::cout << "\nRGB:\nRot: ";
+  std::cout << r;
+  std::cout << "\nGruen: ";
+  std::cout << g;
+  std::cout << "\nBlau: ";
+  std::cout << b;
+  std::cout << "\nCMY:\nCyan: ";
+  std::cout << c;
+  std::cout << "\nMagenta: ";
+  std::cout << m;
+  std::cout << "\nYellow: ";
+  std::cout << y;
+  std::cout << "\nRHSV:\nHue ";
+  std::cout << h;
+  std::cout << "\nSatturation: ";
+  std::cout << s;
+  std::cout << "\nValue: ";
+  std::cout << v;
+
+
+
+  r = r / 255;
+  g = g / 255;
+  b = b / 255;
+ 
+  bool result = init(r,g,b);   
   if (!result) {
     return -2;
   }
