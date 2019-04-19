@@ -278,12 +278,12 @@ int main(int argc, char** argv)
 
   std::cout << "Bitte Farbmodell waehlen: RGB, CMY, HSV";
   std::string eingabe = "";
-  std::cin >> eingabe;
-
+ 
   bool farb = true;
   int farbwert = 0;
 
   while (farbwert==0) {
+	  std::cin >> eingabe;
 	  if (eingabe == "RGB" || eingabe == "rgb") {
 		 farbwert = 1;
 	  }
@@ -294,7 +294,7 @@ int main(int argc, char** argv)
 		farbwert = 3;
 	  }
 	  else {
-		  std::cout << "Falsche eingabe";
+		  std::cout << "Falsche eingabe, RGB/CMY/HSV\n";
 	  }
   }
   while (farb) {
@@ -307,13 +307,13 @@ int main(int argc, char** argv)
 		  std::cout << "Bitte geben sie den Wert fuer Blau an: (Werteberreich 0-255)";
 		  std::cin >> b;
 
-		  if (r < 0 && r > 255) {
+		  if (r < 0 || r > 255) {
 			  std::cout << "Eingabe nur 0-255.";
 		  }
-		  else if (g < 0 && g > 255) {
+		  else if (g < 0 || g > 255) {
 			  std::cout << "Eingabe nur 0-255.";
 		  }
-		  else if (b < 0 && b > 255) {
+		  else if (b < 0 || b > 255) {
 			  std::cout << "Eingabe nur 0-255.";
 		  }
 		  else {
@@ -337,20 +337,20 @@ int main(int argc, char** argv)
 		  std::cout << "Bitte geben sie den Wert fuer Gelb an: (Werteberreich 0-255)";
 		  std::cin >> y;
 
-		  if (c < 0 && c > 255) {
+		  if (c < 0 || c > 255) {
 			  std::cout << "Eingabe nur 0-255.";
 		  }
-		  else if (m < 0 && m > 255) {
+		  else if (m < 0 || m > 255) {
 			  std::cout << "Eingabe nur 0-255.";
 		  }
-		  else if (y < 0 && y > 255) {
+		  else if (y < 0 || y > 255) {
 			  std::cout << "Eingabe nur 0-255.";
 		  }
 		  else {
 			  farb = false;
 		  }
 
-
+		  //R=1.0−C	G=1.0−M B=1.0−Y  CMY -> RGB
 		  r = 255 - c;
 		  g = 255 - m;
 		  b = 255 - y;
@@ -366,13 +366,13 @@ int main(int argc, char** argv)
 		  std::cout << "Bitte geben sie den Wert fuer Value an: (Werteberreich 0-100)";
 		  std::cin >> v;
 
-		  if (h < 0 && h > 359) {
+		  if (h < 0 || h > 359) {
 			  std::cout << "Eingabe Hue nur 0-359.";
 		  }
-		  else if (s < 0 && s > 100) {
+		  else if (s < 0 || s > 100) {
 			  std::cout << "Eingabe nur 0-100.";
 		  }
-		  else if (v < 0 && v > 100) {
+		  else if (v < 0 || v > 100) {
 			  std::cout << "Eingabe nur 0-100.";
 		  }
 		  else {
@@ -388,12 +388,6 @@ int main(int argc, char** argv)
 	  }
 
   }
- 
- 
-
-
-  //R=1.0−C	G=1.0−M B=1.0−Y  CMY -> RGB
-
 
   std::cout << "\nRGB:\nRot: ";
   std::cout << r;
