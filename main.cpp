@@ -325,8 +325,57 @@ int main(int argc, char** argv)
 		  c = 255 - r;
 		  m = 255 - g;
 		  y = 255 - b;
+		  
+		  //RGB -> HSV
+		  float MAX, MIN;
 
+		  //finde das MAX der RGB Werte
+		  if (r >= b&&r >= g) {
+			  MAX = r;
+		  }
+		  else if (b > r&& b > g) {
+			  MAX = b;
+		  }
+		  else if (g>r&&g>b) {
+			  MAX = g;
+		  }
+		  //Finde das MIN der RGB Werte
+		  if (r >= b && r >= b) {
+			  MIN = b;
+		  }
+		  else if (b >= r&& b >= r) {
+			  MIN = r;
+		  }
+		  else if (b >= g && r >= g) {
+			  MIN = g;
+		  }
+		  //Definiere Hue/farbwert
+		  if (r == g && r == b) {
+			  h = 0;
+		  }
+		  else if(MAX==r){
+			  h = 60 * ((g - b) /( MAX - MIN));
+		  }
+		  else if (MAX == g) {
+			  h = 60 * (2 + (b - r) / (MAX - MIN));
+		  }
+		  else if (MAX = b) {
+			  h = 60 * (4 + (r - g) / (MAX - MIN));
+		  }
+		  while (h < 0) {
+			  h = h + 360;
+		  }
 
+		  //Definiere Satturation/Sättigung
+		  if (MAX == 0) {
+			  s = 0;
+		  }
+		  else {
+			  s = (MAX - MIN) / MAX;
+		  }
+
+		  //Definiere Value/Helligkeit
+		  v = MAX/255;
 		  break;
 
 	  case 2://CMY
@@ -355,6 +404,54 @@ int main(int argc, char** argv)
 		  g = 255 - m;
 		  b = 255 - y;
 
+		  //RGB -> HSV
+		  //finde das MAX der RGB Werte
+		  if (r >= b && r >= g) {
+			  MAX = r;
+		  }
+		  else if (b > r&& b > g) {
+			  MAX = b;
+		  }
+		  else if (g>r&&g>b) {
+			  MAX = g;
+		  }
+		  //Finde das MIN der RGB Werte
+		  if (r >= b && r >= b) {
+			  MIN = b;
+		  }
+		  else if (b >= r && b >= r) {
+			  MIN = r;
+		  }
+		  else if (b >= g && r >= g) {
+			  MIN = g;
+		  }
+		  //Definiere Hue/farbwert
+		  if (r == g && r == b) {
+			  h = 0;
+		  }
+		  else if (MAX == r) {
+			  h = 60 * ((g - b) / (MAX - MIN));
+		  }
+		  else if (MAX == g) {
+			  h = 60 * (2 + (b - r) / (MAX - MIN));
+		  }
+		  else if (MAX = b) {
+			  h = 60 * (4 + (r - g) / (MAX - MIN));
+		  }
+		  while (h < 0) {
+			  h = h + 360;
+		  }
+
+		  //Definiere Satturation/Sättigung
+		  if (MAX == 0) {
+			  s = 0;
+		  }
+		  else {
+			  s = (MAX - MIN) / MAX;
+		  }
+
+		  //Definiere Value/Helligkeit
+		  v = MAX/255;
 
 		  break;
 
@@ -378,11 +475,64 @@ int main(int argc, char** argv)
 		  else {
 			  farb = false;
 		  }
+		  s = s / 100;
+		  v = v / 100;
+
+		
+		  //HSV -> RGB
+		  float a, x, n, mod;
+		  a = v * s;
+		  mod = ((h / 60) % 2) - 1;
+		  if (mod < 0) {
+			  mod = mod * (-1);
+		  }
+		  x = a * (1 - mod);
+		  n = v - a;
+
+		  if (h >= 0 && h < 60) {
+			  r = a;
+			  g = x;
+			  b = 0;
+		  }
+		  else if (h >= 60 && h < 120) {
+			  r = x;
+			  g = a;
+			  b = 0;
+		  }
+		  else if (h >= 120 && h < 180) {
+			  r = 0;
+			  g = a;
+			  b = x;
+		  }
+		  else if (h >= 180 && h < 240) {
+			  r = 0;
+			  g = x;
+			  b = a;
+		  }
+		  else if (h >= 240 && h < 300) {
+			  r = x;
+			  g = 0;
+			  b = a;
+		  }
+		  else if (h >= 300 && h < 360) {
+			  r = a;
+			  g = 0;
+			  b = x;
+		  }
+		  r = (r + n) * 255;
+		  g = (g + n) * 255;
+		  b = (b + n) * 255;
+		
+		  //RGB -> CMY
+		  c = 255 - r;
+		  m = 255 - g;
+		  y = 255 - b;
+
 		  break;
 
 	  default://Fehler
 		  std::cout << "Fehler im Programm, abbruch.";
-			  farb = false;
+		  farb = false;
 		  break;
 
 	  }
