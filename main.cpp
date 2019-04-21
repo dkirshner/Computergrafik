@@ -276,7 +276,7 @@ int main(int argc, char** argv)
   float v = 0.0f;
   //Eingabefunktion
 
-  std::cout << "Bitte Farbmodell waehlen: RGB, CMY, HSV";
+  std::cout << "Bitte Farbmodell waehlen: (RGB, CMY, HSV) \n";
   std::string eingabe = "";
  
   bool farb = true;
@@ -300,100 +300,124 @@ int main(int argc, char** argv)
   while (farb) {
 	  switch (farbwert) {
 	  case 1://RGB
-		  std::cout << "Bitte geben sie den Wert fuer Rot an: (Werteberreich 0-255)";
-		  std::cin >> r;
-		  std::cout << "Bitte geben sie den Wert fuer Gruen an: (Werteberreich 0-255)";
-		  std::cin >> g;
-		  std::cout << "Bitte geben sie den Wert fuer Blau an: (Werteberreich 0-255)";
-		  std::cin >> b;
+		 std::cout << "Bitte geben sie den Wert fuer Rot an: (Werteberreich 0-255)";
+		while (!(std::cin >> r)) {
+			std::cout << "Falsche Eingabe (Werteberreich 0-255)" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<int>::max(), '\n'); 
+		 }
+		 std::cout << "Bitte geben sie den Wert fuer Gruen an: (Werteberreich 0-255)";
+		 while (!(std::cin >> g)) {
+			 std::cout << "Falsche Eingabe (Werteberreich 0-255)" << std::endl;
+			 std::cin.clear();
+			 std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+		 }
+		 std::cout << "Bitte geben sie den Wert fuer Blau an: (Werteberreich 0-255)";
+		 while (!(std::cin >> b)) {
+			 std::cout << "Falsche Eingabe (Werteberreich 0-255)" << std::endl;
+			 std::cin.clear();
+			 std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+		 }
+		
+		 if (r < 0 || r > 255) {
+		  std::cout << "\nEingabe nur 0-255.\n\n";
+		 }
+		 else if (g < 0 || g > 255) {
+		  std::cout << "\nEingabe nur 0-255.\n\n";
+		 }
+		 else if (b < 0 || b > 255) {
+		  std::cout << "\nEingabe nur 0-255.\n\n";
+		 }
+		 else {
+		  farb = false;
+		 }
 
-		  if (r < 0 || r > 255) {
-			  std::cout << "Eingabe nur 0-255.";
-		  }
-		  else if (g < 0 || g > 255) {
-			  std::cout << "Eingabe nur 0-255.";
-		  }
-		  else if (b < 0 || b > 255) {
-			  std::cout << "Eingabe nur 0-255.";
-		  }
-		  else {
-			  farb = false;
-		  }
+		 //C=1.0−R M=1.0−G Y=1.0−B  RGB -> CMY
 
-		  //C=1.0−R M=1.0−G Y=1.0−B  RGB -> CMY
-
-		  c = 255 - r;
-		  m = 255 - g;
-		  y = 255 - b;
+		 c = 255 - r;
+		 m = 255 - g;
+		 y = 255 - b;
 		  
-		  //RGB -> HSV
-		  float MAX, MIN;
-
-		  //finde das MAX der RGB Werte
-		  if (r >= b&&r >= g) {
+		 //RGB -> HSV
+		 float MAX, MIN;
+		 
+		 //finde das MAX der RGB Werte
+		 if (r >= b&&r >= g) {
 			  MAX = r;
-		  }
-		  else if (b > r&& b > g) {
-			  MAX = b;
-		  }
-		  else if (g>r&&g>b) {
+		 }
+		 else if (b > r&& b > g) {
+		  MAX = b;
+		 }
+		 else if (g>r&&g>b) {
 			  MAX = g;
-		  }
-		  //Finde das MIN der RGB Werte
-		  if (r >= b && r >= b) {
+		 }
+		 //Finde das MIN der RGB Werte
+		 if (r >= b && r >= b) {
 			  MIN = b;
-		  }
-		  else if (b >= r&& b >= r) {
+		 }
+		 else if (b >= r&& b >= r) {
 			  MIN = r;
-		  }
-		  else if (b >= g && r >= g) {
+		 }
+		 else if (b >= g && r >= g) {
 			  MIN = g;
-		  }
+		 }
 		  //Definiere Hue/farbwert
-		  if (r == g && r == b) {
+		 if (r == g && r == b) {
 			  h = 0;
-		  }
-		  else if(MAX==r){
+		 }
+		 else if(MAX==r){
 			  h = 60 * ((g - b) /( MAX - MIN));
-		  }
-		  else if (MAX == g) {
+		 }
+		 else if (MAX == g) {
 			  h = 60 * (2 + (b - r) / (MAX - MIN));
-		  }
-		  else if (MAX = b) {
+		 }
+		 else if (MAX = b) {
 			  h = 60 * (4 + (r - g) / (MAX - MIN));
-		  }
-		  while (h < 0) {
+		 }
+		 while (h < 0) {
 			  h = h + 360;
-		  }
+		 }
 
 		  //Definiere Satturation/Sättigung
-		  if (MAX == 0) {
+		 if (MAX == 0) {
 			  s = 0;
-		  }
-		  else {
+		 }
+		 else {
 			  s = (MAX - MIN) / MAX;
-		  }
+		 }
 
 		  //Definiere Value/Helligkeit
 		  v = MAX/255;
 		  break;
 
 	  case 2://CMY
-		  std::cout << "Bitte geben sie den Wert fuer Cyan an: (Werteberreich 0-255)";
-		  std::cin >> c;
-		  std::cout << "Bitte geben sie den Wert fuer Magenta an: (Werteberreich 0-255)";
-		  std::cin >> m;
-		  std::cout << "Bitte geben sie den Wert fuer Gelb an: (Werteberreich 0-255)";
-		  std::cin >> y;
+		  std::cout << "Bitte geben sie den Wert fuer Cyan an: (Werteberreich 0-255)\n";
+		  while (!(std::cin >> c)) {
+			  std::cout << "Falsche Eingabe (Werteberreich 0-255)" << std::endl;
+			  std::cin.clear();
+			  std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+		  }
+		  std::cout << "Bitte geben sie den Wert fuer Magenta an: (Werteberreich 0-255)\n";
+		  while (!(std::cin >> m)) {
+			  std::cout << "Falsche Eingabe (Werteberreich 0-255)" << std::endl;
+			  std::cin.clear();
+			  std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+		  }
+		  std::cout << "Bitte geben sie den Wert fuer Gelb an: (Werteberreich 0-255)\n";
+		  while (!(std::cin >> y)) {
+			  std::cout << "Falsche Eingabe (Werteberreich 0-255)" << std::endl;
+			  std::cin.clear();
+			  std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+		  }
 
 		  if (c < 0 || c > 255) {
-			  std::cout << "Eingabe nur 0-255.";
+			  std::cout << "\nEingabe nur 0-255.\n\n";
 		  }
 		  else if (m < 0 || m > 255) {
-			  std::cout << "Eingabe nur 0-255.";
+			  std::cout << "\nEingabe nur 0-255.\n\n";
 		  }
 		  else if (y < 0 || y > 255) {
-			  std::cout << "Eingabe nur 0-255.";
+			  std::cout << "\nEingabe nur 0-255.\n\n";
 		  }
 		  else {
 			  farb = false;
@@ -456,21 +480,33 @@ int main(int argc, char** argv)
 		  break;
 
 	  case 3://HSV
-		  std::cout << "Bitte geben sie den Wert fuer Hue an: (Werteberreich 0-359)";
-		  std::cin >> h;
-		  std::cout << "Bitte geben sie den Wert fuer Satturation an: (Werteberreich 0-100)";
-		  std::cin >> s;
-		  std::cout << "Bitte geben sie den Wert fuer Value an: (Werteberreich 0-100)";
-		  std::cin >> v;
+		  std::cout << "Bitte geben sie den Wert fuer Hue an: (Werteberreich 0-359)\n";
+		  while (!(std::cin >> h)) {
+			  std::cout << "Falsche Eingabe (Werteberreich 0-359)" << std::endl;
+			  std::cin.clear();
+			  std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+		  }
+		  std::cout << "Bitte geben sie den Wert fuer Satturation an: (Werteberreich 0-100)\n";
+		  while (!(std::cin >> s)) {
+			  std::cout << "Falsche Eingabe (Werteberreich 0-100)" << std::endl;
+			  std::cin.clear();
+			  std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+		  }
+		  std::cout << "Bitte geben sie den Wert fuer Value an: (Werteberreich 0-100)\n";
+		  while (!(std::cin >> v)) {
+			  std::cout << "Falsche Eingabe (Werteberreich 0-100)" << std::endl;
+			  std::cin.clear();
+			  std::cin.ignore(std::numeric_limits<int>::max(), '\n');
+		  }
 
 		  if (h < 0 || h > 359) {
-			  std::cout << "Eingabe Hue nur 0-359.";
+			  std::cout << "\nEingabe Hue nur 0-359.\n\n";
 		  }
 		  else if (s < 0 || s > 100) {
-			  std::cout << "Eingabe nur 0-100.";
+			  std::cout << "\nEingabe nur 0-100.\n\n";
 		  }
 		  else if (v < 0 || v > 100) {
-			  std::cout << "Eingabe nur 0-100.";
+			  std::cout << "\nEingabe nur 0-100.\n\n";
 		  }
 		  else {
 			  farb = false;
@@ -551,12 +587,13 @@ int main(int argc, char** argv)
   std::cout << m;
   std::cout << "\nYellow: ";
   std::cout << y;
-  std::cout << "\nRHSV:\nHue ";
+  std::cout << "\nHSV:\nHue ";
   std::cout << h;
   std::cout << "\nSatturation: ";
   std::cout << s;
   std::cout << "\nValue: ";
   std::cout << v;
+  std::cout << "\n\n\n\nNachfolgendes Standard Ausgabe";
 
 
 
