@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="TransformColor.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="CMY.cpp" />
+    <ClCompile Include="RGB.cpp" />
+    <ClCompile Include="HSV.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CMY.h" />
+    <ClInclude Include="HSV.h" />
+    <ClInclude Include="RGB.h" />
+    <ClInclude Include="TransformColor.h" />
+  </ItemGroup>
+</Project>
