@@ -22,7 +22,7 @@ using namespace std;
 double iKlick_X = 0.0f, iKlick_Y = 0.0f, iKlick_Z = 0.0f;
 double dRadius = 0.5;			// init
 unsigned short iSubdivision = 0, iPrevSubdivision = 0;	// init 
-double X_VIEW=-5.0f, Y_VIEW=3.0f, Z_VIEW=-5.0f; //view Matrix
+double X_VIEW=-3.0f, Y_VIEW=-3.0f, Z_VIEW=-3.0f; //view Matrix
 // Standard window width
 const int WINDOW_WIDTH  = 940;
 // Standard window height
@@ -243,10 +243,10 @@ void renderZAxis()
 void initXAxis()
 {
 	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const vector<glm::vec3> vertices = { { -3.0f, 0.0f, 0.0f }, { -3.0f, 0.03f, 0.0f }, { 3.0f, 0.03f, 0.0f }, { 3.0f, 0.0f, 0.0f } };
+	const vector<glm::vec3> vertices = { { -3.0f, 0.0f, 0.0f }, { 3.0f, 0.0f, 0.0f } };
 	// color
-	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } }; // rot
-	const vector<GLushort> indices = { 0, 1, 2, 0, 2, 3 };
+	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } }; // rot
+	const vector<GLushort> indices = {1,0};
 
 	GLuint programId = program.getHandle();
 	XAxis.initObject(vertices, colors, indices, programId);
@@ -255,10 +255,10 @@ void initXAxis()
 void initYAxis()
 {
 	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const vector<glm::vec3> vertices = { { 0.05f, 3.0f, 0.1f },{ 0.08f, 3.0f, 0.1f },{ 0.08f, -3.0f, 0.1f },{ 0.05f, -3.0f, 0.1f } };
+	const vector<glm::vec3> vertices = { { 0.0f, 3.0f, 0.0f },{ 0.0f, -3.0f, 0.0f } };
 	//color
-	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } }; // rot
-	const vector<GLushort> indices = { 0, 1, 2, 0, 2, 3 };
+	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } }; // rot
+	const vector<GLushort> indices = { 1,0};
 
 	GLuint programId = program.getHandle();
 
@@ -268,10 +268,10 @@ void initYAxis()
 void initZAxis()
 {
 	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const vector<glm::vec3> vertices = { { 0.0f, 0.0f, 3.0f },{ 0.0f, -0.03f, 3.0f },{ 0.0f, -0.03f, -3.0f },{ 0.0f, -0.0f, -3.0f } };
+	const vector<glm::vec3> vertices = { { 0.0f, 0.0f, 3.0f }, { 0.0f, 0.0f, -3.0f } };
 	// Farbe
-	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } }; // rot
-	const vector<GLushort> indices = { 0, 1, 2, 0, 2, 3 };
+	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f } }; // rot
+	const vector<GLushort> indices = {1,0};
 
 	GLuint programId = program.getHandle();
 
