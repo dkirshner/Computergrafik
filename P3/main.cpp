@@ -22,7 +22,7 @@ using namespace std;
 double iKlick_X = 0.0f, iKlick_Y = 0.0f, iKlick_Z = 0.0f;
 double dRadius = 0.5;			// init
 unsigned short iSubdivision = 0, iPrevSubdivision = 0;	// init 
-double  X_VIEW=-3.0f, Y_VIEW=-3.0f, Z_VIEW=-3.0f; //view Matrix
+double X_VIEW=-5.0f, Y_VIEW=3.0f, Z_VIEW=-5.0f; //view Matrix
 // Standard window width
 const int WINDOW_WIDTH  = 940;
 // Standard window height
@@ -64,9 +64,9 @@ vector<glm::vec3> colorsCircle = {	// Einheitliche Farbe gelb!
 	{ 1.0f, 1.0f, 0.0f },
 	{ 1.0f, 1.0f, 0.0f }, // end front
 
+	{ 1.0f, 1.0f, 0.0f },//bottom
 	{ 1.0f, 1.0f, 0.0f },
-	{ 1.0f, 1.0f, 0.0f },
-	{ 1.0f, 1.0f, 0.0f }, // end front
+	{ 1.0f, 1.0f, 0.0f }, 
 
 	{ 1.0f, 1.0f, 0.0f },
 	{ 1.0f, 1.0f, 0.0f },
@@ -87,7 +87,7 @@ vector<glm::vec3> colorsCircle = {	// Einheitliche Farbe gelb!
 	{ 1.0f, 1.0f, 0.0f },
 	{ 1.0f, 1.0f, 0.0f },
 	{ 1.0f, 1.0f, 0.0f }  // end right
-	};
+};
 
 // The indices of the sides, beginning at the front
 vector<GLushort>indicesCircle = {
@@ -196,7 +196,7 @@ void initCircle()
 	// Unbind vertex array object (back to default).
 	glBindVertexArray(0);
 	// INIT: Transformation des Kreise
-	Circle.model = glm::scale(Circle.model, glm::vec3(dRadius));
+	Circle.model = glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
 }
 
 //Stellt ein Koordinatensystem dar
@@ -243,10 +243,10 @@ void renderZAxis()
 void initXAxis()
 {
 	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const vector<glm::vec3> vertices = { { -3.0f, 0.0f, 0.0f }, { 3.0f, 0.0f, 0.0f } };
+	const vector<glm::vec3> vertices = { { -3.0f, 0.0f, 0.0f }, { -3.0f, 0.03f, 0.0f }, { 3.0f, 0.03f, 0.0f }, { 3.0f, 0.0f, 0.0f } };
 	// color
-	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0, 0.0f } }; // rot
-	const vector<GLushort> indices = { 0, 1};
+	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } }; // rot
+	const vector<GLushort> indices = { 0, 1, 2, 0, 2, 3 };
 
 	GLuint programId = program.getHandle();
 	XAxis.initObject(vertices, colors, indices, programId);
@@ -255,10 +255,10 @@ void initXAxis()
 void initYAxis()
 {
 	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const vector<glm::vec3> vertices = { { 0.0f, 3.0f, 0.0f },{ 0.0f, -3.0f, 0.0f } };
+	const vector<glm::vec3> vertices = { { 0.05f, 3.0f, 0.1f },{ 0.08f, 3.0f, 0.1f },{ 0.08f, -3.0f, 0.1f },{ 0.05f, -3.0f, 0.1f } };
 	//color
-	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0, 0.0f } }; // rot
-	const vector<GLushort> indices = { 0, 1};
+	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } }; // rot
+	const vector<GLushort> indices = { 0, 1, 2, 0, 2, 3 };
 
 	GLuint programId = program.getHandle();
 
@@ -268,10 +268,10 @@ void initYAxis()
 void initZAxis()
 {
 	// Construct triangle. These vectors can go out of scope after we have send all data to the graphics card.
-	const vector<glm::vec3> vertices = { { 0.0f, 0.0f, 3.0f },{ 0.0f, -0.0f, -3.0f } };
+	const vector<glm::vec3> vertices = { { 0.0f, 0.0f, 3.0f },{ 0.0f, -0.03f, 3.0f },{ 0.0f, -0.03f, -3.0f },{ 0.0f, -0.0f, -3.0f } };
 	// Farbe
-	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0, 0.0f } }; // rot
-	const vector<GLushort> indices = { 0, 1 };
+	const vector<glm::vec3> colors = { { 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0, 0.0f },{ 1.0f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f } }; // rot
+	const vector<GLushort> indices = { 0, 1, 2, 0, 2, 3 };
 
 	GLuint programId = program.getHandle();
 
@@ -482,7 +482,7 @@ int SubDivisionAlgorithm()
 					colorsCircle_2.push_back(colorsCircle[i]);
 			}
 		}
-		else
+		else 
 		{
 			if (verticesCircle.size())
 				verticesCircle.clear();
@@ -545,7 +545,7 @@ int SubDivisionAlgorithm()
 
 	vector<glm::vec3>tmpColors;
 	vector<glm::vec3>tmpVertices;
-	vector<GLushort> tmpIndices;
+	vector<GLushort> tmpIndices;  
 
 	glm::vec3 newV1, newV2, newV3; // new vertex positions
 	unsigned int index;
@@ -561,7 +561,7 @@ int SubDivisionAlgorithm()
 	for (int i = 0; i < colorsCircle.size(); i++)
 		tmpColors.push_back(colorsCircle[i]);
 
-	if (verticesCircle.size())
+	if(verticesCircle.size())
 		verticesCircle.clear();
 
 	if (indicesCircle.size())
@@ -706,8 +706,8 @@ int SubDivisionAlgorithm()
 		// radian = degree * π/180
 
 		// Modifiziere "model matrix": Kugel um Nullpunkt und Z-Achse rotieren!!!
-		Circle.model = glm::rotate(glm::mat4(1.0f), ((float)M_PI), glm::vec3(0.0f, 0.0f, 1.0f)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
+		Circle.model = glm::rotate(glm::mat4(1.0f), ((float)M_PI), glm::vec3(0.0f, 0.0f, 1.0f)) * 
+				        glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
 
 		CirclePieses.push_back(Circle);
 	}
@@ -721,8 +721,8 @@ int SubDivisionAlgorithm()
 		float dAngle = (float)(M_PI) / (-2.0);
 
 		// Modifiziere "model matrix": Kugel um Nullpunkt und Z-Achse rotieren!!!
-		Circle.model = glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
+		Circle.model =	glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
+						glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
 
 		CirclePieses.push_back(Circle);
 
@@ -732,8 +732,8 @@ int SubDivisionAlgorithm()
 		dAngle = (float)(M_PI) / 2.0;
 
 		// Modifiziere "model matrix": Kugel um Nullpunkt und Z-Achse rotieren!!!
-		Circle.model = glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
+		Circle.model =	glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
+				        glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
 
 		CirclePieses.push_back(Circle);
 
@@ -742,8 +742,8 @@ int SubDivisionAlgorithm()
 		dAngle = (float)(M_PI);
 
 		// Modifiziere "model matrix": Kugel um Nullpunkt und Z-Achse rotieren!!!
-		Circle.model = glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
+		Circle.model =	glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
+						glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
 
 		CirclePieses.push_back(Circle);
 
@@ -753,19 +753,19 @@ int SubDivisionAlgorithm()
 
 		// Modifiziere "model matrix": Kugel um Nullpunkt und Z-Achse rotieren!!!
 		Circle.model = glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 0.0f, 1.0f)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
+					   glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
 
 		CirclePieses.push_back(Circle);
 
 		// Körper unten #2
 		initCircle();
-		dAngle = (float)(M_PI) / 2.0;
+		dAngle = (float)(M_PI) /2.0;
 		float dAngle_2 = (float)(M_PI);
 
 		// Modifiziere "model matrix": Kugel um Nullpunkt und Z-Achse rotieren!!!
 		Circle.model = glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
-			glm::rotate(glm::mat4(1.0f), dAngle_2, glm::vec3(1.0f, 0.0f, 0.0f)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
+					   glm::rotate(glm::mat4(1.0f), dAngle_2, glm::vec3(1.0f, 0.0f, 0.0f)) *
+					   glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
 
 		CirclePieses.push_back(Circle);
 
@@ -776,9 +776,9 @@ int SubDivisionAlgorithm()
 
 		// Modifiziere "model matrix": Kugel um Nullpunkt und Z-Achse rotieren!!!
 		Circle.model = glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
-			glm::rotate(glm::mat4(1.0f), dAngle_2, glm::vec3(1.0f, 0.0f, 0.0f)) *
-			glm::rotate(glm::mat4(1.0f), dAngle_2, glm::vec3(0.0f, 1.0f, 0.0f)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
+			           glm::rotate(glm::mat4(1.0f), dAngle_2, glm::vec3(1.0f, 0.0f, 0.0f)) *
+					   glm::rotate(glm::mat4(1.0f), dAngle_2, glm::vec3(0.0f, 1.0f, 0.0f)) *
+			           glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
 
 		CirclePieses.push_back(Circle);
 
@@ -789,14 +789,14 @@ int SubDivisionAlgorithm()
 		float dAngle_3 = (float)(M_PI) / 2.0;
 
 		// Modifiziere "model matrix": Kugel um Nullpunkt und Z-Achse rotieren!!!
-		Circle.model = glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
-			glm::rotate(glm::mat4(1.0f), dAngle_2, glm::vec3(1.0f, 0.0f, 0.0f)) *
-			glm::rotate(glm::mat4(1.0f), dAngle_3, glm::vec3(0.0f, 1.0f, 0.0f)) *
-			glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
+		Circle.model =	glm::rotate(glm::mat4(1.0f), dAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
+						glm::rotate(glm::mat4(1.0f), dAngle_2, glm::vec3(1.0f, 0.0f, 0.0f)) *
+						glm::rotate(glm::mat4(1.0f), dAngle_3, glm::vec3(0.0f, 1.0f, 0.0f)) *
+						glm::scale(glm::mat4(1.0f), glm::vec3(dRadius, dRadius, dRadius));
 
 		CirclePieses.push_back(Circle);
 	}
-
+ 
 	if (iSubdivision != 3)
 		initCircle();
 
@@ -812,7 +812,6 @@ int SubDivisionAlgorithm()
 	return 0;
 }
 
-
 ////////////////////////////////////////////////////////////////7
 
 /*
@@ -827,10 +826,10 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 	  return;
 
 	case 'r':
-		if (dRadius > 0.3) {
+		if (dRadius > 0.3) 
+		{
 			dRadius -= 0.1;
-			
-			Circle.model = Circle.model * glm::mat4x4{ {0.9,0,0,0},{0,0.9,0,0},{0,0,0.9,0},{0,0,0,1} };
+			Circle.model = Circle.model * glm::mat4x4{ {0.9, 0,0,0}, {0,0.9,0,0}, {0,0,0.9,0}, {0,0,0,1}};
 		}
  
 		break;
@@ -838,8 +837,8 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 	case 'R':
 		if (dRadius < 2.0) {
 			dRadius += 0.1;
-			Circle.model = Circle.model * glm::mat4x4{ { 1.1,0,0,0 },{ 0,1.1,0,0 },{ 0,0,1.1,0 },{ 0,0,0,1 } };
-			//Circle.model = glm::scale(Circle.model, glm::vec3(dRadius));
+			
+			Circle.model = Circle.model * glm::mat4x4{ { 1.1, 0,0,0 },{ 0,1.1,0,0 },{ 0,0,1.1,0 },{ 0,0,0,1 } };
 		}
  
 		break;
@@ -847,8 +846,8 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 	case 's':
 		if(Z_VIEW < -1){
 			Z_VIEW += 0.2;
+			Y_VIEW += 0.2;
 			X_VIEW += 0.2;
-			Y_VIEW +=0.2;
 		}
 		initView();
 		break;
@@ -856,8 +855,8 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 	case 'a':
 		if (Z_VIEW > -5) {
 			Z_VIEW -= 0.2;
-			X_VIEW -= 0.2;
 			Y_VIEW -= 0.2;
+			X_VIEW -= 0.2;
 		}
 		initView();
 		break;
@@ -895,22 +894,19 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 		if (iSubdivision < 4.0)
 		{
 			iPrevSubdivision = iSubdivision;
-			iSubdivision++;
+			iSubdivision+= 1;
 			SubDivisionAlgorithm();
 		}
 		break;
 
 	case '-':
-		if (iSubdivision > 1.0)
+		if (iSubdivision > 0.0)
 		{
+			iSubdivision -= 1;
 			iPrevSubdivision = iSubdivision;
-			iSubdivision--;
 			SubDivisionAlgorithm();
 		}
-
 		break;
-
-
 	}
 
 	glutPostRedisplay();
