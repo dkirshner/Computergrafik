@@ -1,128 +1,192 @@
-#include "Init.h"
-#include "Header.h"
-#include "Render.h"
+#include <iostream>
+#include <vector>
 
+#include <GL/glew.h>
+//#include <GL/gl.h> // OpenGL header not necessary, included by GLEW
+#include <GL/freeglut.h>
 
-void rotate()
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
+
+#include "GLSLProgram.h"
+#include "GLTools.h"
+
+// Standard window width
+const int WINDOW_WIDTH  = 640;
+// Standard window height
+const int WINDOW_HEIGHT = 480;
+// GLUT window id/handle
+int glutID = 0;
+
+cg::GLSLProgram program;
+
+glm::mat4x4 view;
+glm::mat4x4 projection;
+
+float zNear = 0.1f;
+float zFar  = 100.0f;
+
+/*
+Struct to hold data for object rendering.
+*/
+class Object
 {
-	//Rotation des Gesammten Systems
-	//Planeten
-	Planetschief.model = glm::rotate(Sonne.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * Planetschief.model;
-	PlanetGrade.model = glm::rotate(Sonne.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * PlanetGrade.model;
-	//Monde Planet Grade
-	moon1.model = glm::rotate(PlanetGrade.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * moon1.model;
-	moon2.model = glm::rotate(PlanetGrade.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * moon2.model;
-	moon3.model = glm::rotate(PlanetGrade.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * moon3.model;
-	moon4.model = glm::rotate(PlanetGrade.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * moon4.model;
-	//Monde Planet schief:
-	//unten
-	moon5.model = glm::rotate(Planetschief.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * moon5.model;
-	moon6.model = glm::rotate(Planetschief.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * moon6.model;
+public:
+  inline Object ()
+    : vao(0),
+      positionBuffer(0),
+      colorBuffer(0),
+      indexBuffer(0)
+  {}
 
-	moon7.model = glm::rotate(Planetschief.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * moon7.model;
-	moon8.model = glm::rotate(Planetschief.model, glm::radians(iVelocity), glm::vec3(0, 1, 0)) * moon8.model;
+  inline ~Object () { // GL context must exist on destruction
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &indexBuffer);
+    glDeleteBuffers(1, &colorBuffer);
+    glDeleteBuffers(1, &positionBuffer);
+  }
 
-	
-	glutPostRedisplay();
+  GLuint vao;        // vertex-array-object ID
+  
+  GLuint positionBuffer; // ID of vertex-buffer: position
+  GLuint colorBuffer;    // ID of vertex-buffer: color
+  
+  GLuint indexBuffer;    // ID of index-buffer
+  
+  glm::mat4x4 model; // model matrix
+};
+
+Object Sonne;
+Object PlanetG;
+Object PlanetS;
+
+void renderSonne()
+{
+  // Create mvp.
+  glm::mat4x4 mvp = projection * view * Sonne.model;
+  
+  // Bind the shader program and set uniform(s).
+  program.use();
+  program.setUniform("mvp", mvp);
+  
+  // Bind vertex array object so we can render the 1 triangle.
+  glBindVertexArray(Sonne.vao);
+  glDrawElements(GL_TRIANGLES, 99, GL_UNSIGNED_SHORT, 0);
+  glBindVertexArray(0);
 }
+
+
+
+void initOcta()
+{
+  // Create Octaeder
+  const std::vector<glm::vec3> vertices = { glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f),glm::vec3(0.0f, -1.0f, 0.0f),
+	  glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 0.0f, -1.0f) };
+  const std::vector<glm::vec3> colors   = { glm::vec3(1.0f, 0.0f, 0.0f),glm::vec3(1.0f, 0.0f, 0.0f),glm::vec3(1.0f, 0.0f, 0.0f),glm::vec3(1.0f, 0.0f, 0.0f),glm::vec3(1.0f, 0.0f, 0.0f),glm::vec3(1.0f, 0.0f, 0.0f) };
+  const std::vector<GLushort>  indices  = { 
+	
+	  2,1,5,
+	  2,0,4,
+	  1,2,4,
+	  0,2,5,
+	  3,1,4,
+	  1,3,5,
+	  0,3,4,
+	  3,0,5
+	};
+  GLuint programId = program.getHandle();
+  GLuint pos;
+
+  // Step 0: Create vertex array object.
+  glGenVertexArrays(1, &Sonne.vao);
+  glBindVertexArray(Sonne.vao);
+  
+  // Step 1: Create vertex buffer object for position attribute and bind it to the associated "shader attribute".
+  glGenBuffers(1, &Sonne.positionBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, Sonne.positionBuffer);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
+  
+  // Bind it to position.
+  pos = glGetAttribLocation(programId, "position");
+  glEnableVertexAttribArray(pos);
+  glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  
+  // Step 2: Create vertex buffer object for color attribute and bind it to...
+  glGenBuffers(1, &Sonne.colorBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, Sonne.colorBuffer);
+  glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
+  
+  // Bind it to color.
+  pos = glGetAttribLocation(programId, "color");
+  glEnableVertexAttribArray(pos);
+  glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  
+  // Step 3: Create vertex buffer object for indices. No binding needed here.
+  glGenBuffers(1, &Sonne.indexBuffer);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Sonne.indexBuffer);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLushort), indices.data(), GL_STATIC_DRAW);
+  
+  // Unbind vertex array object (back to default).
+  glBindVertexArray(0);
+  
+  // Modify model matrix.
+}
+
 
 /*
  Initialization. Should return true if everything is ok and false if something went wrong.
  */
 bool init()
 {
-	// OpenGL: Set "background" color and enable depth testing.
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
+  // OpenGL: Set "background" color and enable depth testing.
+  glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+  //glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
 
-	// Construct view matrix.
-	glm::vec3 eye(0.0f, 0.0f, 10.0f);
-	glm::vec3 center(0.0f, 0.0f, 0.0f);
-	glm::vec3 up(0.0f, 1.0f, 0.0f);
-
-	view = glm::lookAt(eye, center, up);
-
-	// Create a shader program and set light direction.
-	if (!program.compileShaderFromFile("shader/simple.vert", cg::GLSLShader::VERTEX))
-	{
-		std::cerr << program.log();
-		return false;
-	}
-
-	if (!program.compileShaderFromFile("shader/simple.frag", cg::GLSLShader::FRAGMENT))
-	{
-		std::cerr << program.log();
-		return false;
-	}
-	
-	if (!program.link())
-	{
-		std::cerr << program.log();
-		return false;
-	}
-
-	// Create all objects!!!
-	init_Y_Axis_Sun(program.getHandle(), &Y_AxisSun);
-	init_Y_Axis_Planet(program.getHandle(), &Y_AxisMoon, PlanetGrade);
-	initY_AxisMoonSlope(program.getHandle(), &Y_AxisMoonSlope, Planetschief);
-
-
-	// GLUT: create vertex-array-object for glut geometry, the "default"
-	// must be bound before the glutWireSphere call
-
-	initWireSphere(program.getHandle(), &Sonne);
-	initWireSphereSchief(program.getHandle(), &Planetschief);
-
-	Planetschief.model = Planetschief.model * glm::rotate(Sonne.model, glm::radians(0.0f), glm::vec3(1, 0, 0)); // kippen um 45° von Planetschief
-
-	initWireSphereGrade(program.getHandle(), &PlanetGrade);
-
-	initWireSpheremoon1(program.getHandle(), &moon1, PlanetGrade);
-	initWireSpheremoon1(program.getHandle(), &moon2, PlanetGrade);
-	initWireSpheremoon1(program.getHandle(), &moon3, PlanetGrade);
-	initWireSpheremoon1(program.getHandle(), &moon4, PlanetGrade);
-
-	
-	return true;
+  // Construct view matrix.
+  glm::vec3 eye(0.0f, 0.0f, 10.0f);
+  glm::vec3 center(0.0f, 0.0f, 0.0f);
+  glm::vec3 up(0.0f, 1.0f, 0.0f);
+  
+  view = glm::lookAt(eye, center, up);
+  
+  // Create a shader program and set light direction.
+  if (!program.compileShaderFromFile("shader/simple.vert", cg::GLSLShader::VERTEX)) {
+    std::cerr << program.log();
+    return false;
+  }
+  
+  if (!program.compileShaderFromFile("shader/simple.frag", cg::GLSLShader::FRAGMENT)) {
+    std::cerr << program.log();
+    return false;
+  }
+  
+  if (!program.link()) {
+    std::cerr << program.log();
+    return false;
+  }
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  // Create all objects.
+  initOcta();
+  
+  return true;
 }
 
-
 /*
- Release object resources.
-*/
-void releaseObject(Object& obj)
-{
-	glDeleteVertexArrays(1, &obj.vao);
-	glDeleteBuffers(1, &obj.indexBuffer);
-	glDeleteBuffers(1, &obj.colorBuffer);
-	glDeleteBuffers(1, &obj.positionBuffer);
-}
-
-
-/*
- Release resources on termination.
+ Rendering.
  */
-void release()
+void render()
 {
-	// Shader program will be released upon program termination.
-
-	releaseObject(Y_AxisSun);
-	releaseObject(Y_AxisMoon);
-	releaseObject(Y_AxisMoonSlope);
-
-	releaseObject(Sonne);
-	releaseObject(Planetschief);
-	releaseObject(PlanetGrade);
-	releaseObject(moon1);
-	releaseObject(moon2);
-	releaseObject(moon3);
-	releaseObject(moon4);
-
-	releaseObject(moon5);
-	releaseObject(moon6);
-	releaseObject(moon7);
-	releaseObject(moon8);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	renderSonne();
 	
+}
+
+void glutDisplay ()
+{
+   render();
+   glutSwapBuffers();
 }
 
 /*
@@ -130,274 +194,100 @@ void release()
  */
 void glutResize (int width, int height)
 {
-	// Division by zero is bad...
-	height = height < 1 ? 1 : height;
-	glViewport(0, 0, width, height);
-
-	// Construct projection matrix.
-	projection = glm::perspective(45.0f, (float) width / height, zNear, zFar);
-}
-		
-
-/*
-Callback for char input.
-*/
-void glutKeyboard(unsigned char keycode, int x, int y)
-{
-
-	switch (keycode)
-	{
-	case 27: // ESC
-		glutDestroyWindow(glutID);
-		return;
-
-	case 'w':	//Rotation des Gesammten Systems
-		if (iVelocity > 0.1)
-			iVelocity -= 0.1f;
-		break;
-
-	case 'W':	//Rotation des Gesammten Systems beschleunigen
-		if(iVelocity < 0.7)
-			iVelocity += 0.1f;
-
-		break;
-	case 't': //Bewegung des Gesammten Planetensystems entlang der Y-Achse nach unten
-				//Planeten
-		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, 1.0));
-		Y_AxisSun.model = glm::translate(Y_AxisSun.model, glm::vec3(0.0, 0.0, 1.0));
-		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, 1.0));
-		Planetschief.model = glm::translate(Planetschief.model, glm::vec3(0.0, -0.7, 0.7));
-		//Monde Planet Grade
-		Y_AxisMoonSlope.model = glm::translate(Y_AxisMoonSlope.model, glm::vec3(0.0, -0.7, 0.7));
-		Y_AxisMoon.model = glm::translate(Y_AxisMoon.model, glm::vec3(0.0, 1.0, 0.0));
-		moon1.model = glm::translate(moon1.model, glm::vec3(0.0, 1.0, 0.0));
-		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, 1.0, 0.0));
-		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, 1.0, 0.0));
-		moon4.model = glm::translate(moon4.model, glm::vec3(0.0, -0.7, 0.7));
-		//Monde Planet schief:
-		//unten
-
-		moon5.model = glm::translate(moon5.model, glm::vec3(0.0, -0.7, 0.7));
-		moon6.model = glm::translate(moon6.model, glm::vec3(0.0, -0.7, 0.7));
-		moon7.model = glm::translate(moon7.model, glm::vec3(0.0, -0.7, 0.7));
-		//mitte
-		moon8.model = glm::translate(moon8.model, glm::vec3(0.0, -0.7, 0.7));
-		break;
-	case 'T': //Bewegung des Gesammten Planetensystems entlang der Y-Achse nach oben
-				//Planeten
-		Sonne.model = glm::translate(Sonne.model, glm::vec3(0.0, 0.0, -1.0));
-		Y_AxisSun.model = glm::translate(Y_AxisSun.model, glm::vec3(0.0, 0.0, -1.0));
-		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, -1.0));
-		Planetschief.model = glm::translate(Planetschief.model, glm::vec3(0.0, 0.7, -0.7));
-		//Monde Planet Grade
-		Y_AxisMoonSlope.model = glm::translate(Y_AxisMoonSlope.model, glm::vec3(0.0, 0.7, -0.7));
-		Y_AxisMoon.model = glm::translate(Y_AxisMoon.model, glm::vec3(0.0, 0.0, -1.0));
-
-		moon1.model = glm::translate(moon1.model, glm::vec3(0.0, -1.0, 0.0));
-		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, -1.0, 0.0));
-		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, -1.0, 0.0));
-		moon4.model = glm::translate(moon4.model, glm::vec3(0.0, -1.0, 0.0));
-		//Monde Planet schief:
-		//unten
-
-		moon5.model = glm::translate(moon5.model, glm::vec3(0.0, 0.7, -0.7));
-		moon6.model = glm::translate(moon6.model, glm::vec3(0.0, 0.7, -0.7));
-		moon7.model = glm::translate(moon7.model, glm::vec3(0.0, 0.7, -0.7));
-		//mitte
-		moon8.model = glm::translate(moon8.model, glm::vec3(0.0, 0.7, -0.7));
-
-		break;
-	case 'l': //Grader Planet nach unten bewegen
-		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, 1.0));
-		Y_AxisMoon.model = glm::translate(Y_AxisMoon.model, glm::vec3(0.0, 0.0, 1.0));
-		moon1.model = glm::translate(moon1.model, glm::vec3(0.0, 1.0, 0.0));
-		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, 1.0, 0.0));
-		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, 1.0, 0.0));
-		moon4.model = glm::translate(moon4.model, glm::vec3(0.0, 1.0, 0.0));
-		break;
-	case 'L': //Grader Planet nach oben bewegen
-		PlanetGrade.model = glm::translate(PlanetGrade.model, glm::vec3(0.0, 0.0, -1.0));
-		Y_AxisMoon.model = glm::translate(Y_AxisMoon.model, glm::vec3(0.0, 0.0, -1.0));
-		moon1.model = glm::translate(moon1.model, glm::vec3(0.0, -1.0, 0.0));
-		moon2.model = glm::translate(moon2.model, glm::vec3(0.0, -1.0, 0.0));
-		moon3.model = glm::translate(moon3.model, glm::vec3(0.0, -1.0, 0.0));
-		moon4.model = glm::translate(moon4.model, glm::vec3(0.0, -1.0, 0.0));
-		break;
-
-
-	case 'p':  //Rotation des Schiefen Planeten 
-		
-			Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(-5.0f), glm::vec3(1, 0, 0));
-		 	initWireSpheremoon4(program.getHandle(), &moon4, Planetschief);
-		 	initWireSpheremoon5(program.getHandle(), &moon5, Planetschief);
-		 	initWireSpheremoon6(program.getHandle(), &moon6, Planetschief);
-			initWireSpheremoon7(program.getHandle(), &moon7, Planetschief);
-		 	initWireSpheremoon8(program.getHandle(), &moon8, Planetschief);
-
-			break;
-		 	//bug: nach drehung geht der Planet bei T oder t immer in 45° gekippte X achse des Planeten 
-	 	case 'P': //Rotation des Schiefen Planeten 
-	 		Planetschief.model = Planetschief.model*glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(1, 0, 0));
-	 		initWireSpheremoon4(program.getHandle(), &moon4, Planetschief);
-	 		initWireSpheremoon5(program.getHandle(), &moon5, Planetschief);
-	 		initWireSpheremoon6(program.getHandle(), &moon6, Planetschief);
-	 		initWireSpheremoon7(program.getHandle(), &moon7, Planetschief);
-	 		initWireSpheremoon8(program.getHandle(), &moon8, Planetschief);
-
-	 		break;
-	}
-	glutPostRedisplay();
+  // Division by zero is bad...
+  height = height < 1 ? 1 : height;
+  glViewport(0, 0, width, height);
+  
+  // Construct projection matrix.
+  projection = glm::perspective(45.0f, (float) width / height, zNear, zFar);
 }
 
 /*
-Rendering.
-*/
-void render()
+ Callback for char input.
+ */
+void glutKeyboard (unsigned char keycode, int x, int y)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  switch (keycode) {
+  case 27: // ESC
+    glutDestroyWindow ( glutID );
+    return;
+    
+  case '+':
+    // do something
+    break;
+  case '-':
+    // do something
+    break;
+  case 'x':
+	  Sonne.model = glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(1.0f, 0.0f, 0.0f))*Sonne.model;
+    break;
+  case 'y':
+	  Sonne.model = glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(0.0f, 1.0f, 0.0f))*Sonne.model;
+	  break;
+  case 'z':
+	  Sonne.model = glm::rotate(glm::mat4(1.0f), glm::radians(5.0f), glm::vec3(0.0f, 0.0f, 1.0f))*Sonne.model;
 
-	renderAxis(view, projection, program, Y_AxisSun);
-	renderAxis(view, projection, program, Y_AxisMoon);
-	renderAxis(view, projection, program, Y_AxisMoonSlope);
-
-	renderWireSphereSonne(view, projection, program, Sonne);
-	renderWireSpherePlanetschief(view, projection, program, Planetschief);
-	renderWireSpherePlanetgrade(view, projection, program, PlanetGrade);
-
-	renderWireSpheremoon1(view, projection, program, moon1);
-	renderWireSpheremoon2(view, projection, program, moon2);
-	renderWireSpheremoon3(view, projection, program, moon3);
-	renderWireSpheremoon4(view, projection, program, moon4);
-
-	renderWireSpheremoon5(view, projection, program, moon5);
-	renderWireSpheremoon6(view, projection, program, moon6);
-	renderWireSpheremoon7(view, projection, program, moon7);
-	renderWireSpheremoon8(view, projection, program, moon8);
-}
-
-void glutDisplay()
-{
-	GLCODE(render());
-	glutSwapBuffers();
-	rotate();
+    break;
+  }
+  glutPostRedisplay();
 }
 
 int main(int argc, char** argv)
 {
-	///  START: erzeuge Fenster
-	// Initialisiere "FreeGLUT" - Bibliothek (window toolkit)
-	glutInit(&argc, argv); // FreeGLUT benötigt mehrere Parameter (siehe main(...)) für das Programm-Kontolle...
-						   /*This function does not return anything, but simply sets up FreeGLUT for use in your application.
-						   In any program, this should be the first FreeGLUT function you should call!*/
+  // GLUT: Initialize freeglut library (window toolkit).
+  glutInitWindowSize    (WINDOW_WIDTH, WINDOW_HEIGHT);
+  glutInitWindowPosition(40,40);
+  glutInit(&argc, argv);
+  
+  // GLUT: Create a window and opengl context (version 4.3 core profile).
+  glutInitContextVersion(4, 3);
+  glutInitContextFlags  (GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
+  glutInitDisplayMode   (GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
+  
+  glutCreateWindow("Aufgabenblatt 01");
+  glutID = glutGetWindow();
+  
+  // GLEW: Load opengl extensions
+  //glewExperimental = GL_TRUE;
+  if (glewInit() != GLEW_OK) {
+    return -1;
+  }
+#if _DEBUG
+  if (glDebugMessageCallback) {
+    std::cout << "Register OpenGL debug callback " << std::endl;
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(cg::glErrorVerboseCallback, nullptr);
+    glDebugMessageControl(GL_DONT_CARE,
+			  GL_DONT_CARE,
+			  GL_DONT_CARE,
+			  0,
+			  nullptr,
+			  true); // get all debug messages
+  } else {
+    std::cout << "glDebugMessageCallback not available" << std::endl;
+  }
+#endif
 
-						   // GLUT: Initialisiere "FreeGLUT" - Bibliothek (window toolkit).
-	glutInitWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-	glutInitWindowPosition(40, 40);
+  // GLUT: Set callbacks for events.
+  glutReshapeFunc(glutResize);
+  glutDisplayFunc(glutDisplay);
+  //glutIdleFunc   (glutDisplay); // redisplay when idle
+  
+  glutKeyboardFunc(glutKeyboard);
+  
+  // init vertex-array-objects.
+  bool result = init();
+  if (!result) {
+    return -2;
+  }
 
-	/*FreeGLUT mitteilen, welche Art von OpenGL-Kontext wir für unser Programm verwenden möchten:*/
-	glutInitContextVersion(4, 3);	// GLUT:  Erstellen einen OpenGL-Kontext(version 4.3 core profile).
-									/*Wenn in der Befehlszeile OpenGL 4.0 nicht angezeigt wird, ist
-									bei der Erstellung des Kontexts ein Fehler aufgetreten,
-									oder Ihr Treiber hat Ihre Anforderung nach einem OpenGL 4.0-Kontext nicht erfüllt!*/
-
-	glutInitContextProfile(GLUT_CORE_PROFILE);
-	/*Wir bitten FreeGLUT, einen vorwärtskompatiblen OpenGL 4.3-Kernprofilkontext zurückzugeben.*/
-	glutInitContextFlags(GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
-
-	/*Welche Art von OpenGL-Kontext wir wünschen und wie das Gerät unsere Szene rendern soll:
-	Parameter:
-	GLUT_RGB, GLUT_RGBA   : ist ein Flag, das die Art und Weise definiert,
-	wie Farben unter Verwendung einzelner Rot-, Grün-, Blau- und Alpha-Werte zusammengesetzt werden.
-	GLUT_DEPTH : ermöglicht die Verwendung des Tiefenpuffers, einem wichtigen Mechanismus in der 3D - Computergrafik.
-	Der Tiefenpuffer(auch Z - Puffer genannt) enthält die Fließkomma - Z - Tiefeninformation
-	jedes auf dem Bildschirm gerenderten Pixels.
-	Dieser Mechanismus ist wichtig beim Rendern neuer Objekte, um sicherzustellen,
-	dass sie keine Objekte überlappen, die sich näher am Bildschirm befinden
-	(und somit auch bestimmt wird, ob das neue Pixel das vorhandene Pixel überschreiben soll).
-	GLUT_DOUBLE: Verwendung von Doppelpufferung ermöglicht, eine Funktion, die das Bildflimmern reduziert.
-	Bei Doppelpufferung werden alle Zeichenbefehle in einem Puffer außerhalb des Bildschirms ausgeführt,
-	der an den Bildschirm gesendet wird, wenn alle Zeichnungen für einen Rahmen abgeschlossen sind,
-	sodass keine unvollständigen Bilder angezeigt werden.
-	Der aktuell angezeigte Puffer wird als vorderer Puffer bezeichnet, und der Puffer, in den wir ziehen,
-	wird als (Sie ahnen Sie es) Back-Puffer bezeichnet. Wenn alle Zeichenbefehle abgeschlossen sind,
-	werden diese Puffer ausgetauscht, so dass der hintere Puffer zum vorderen Puffer wird und umgekehrt.
-	*/
-
-	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-
-	/*Sicherstellen, dass die glutMainLoop-Funktion in main zum Programm zurückkehrt
-	und das Programm nicht beendet, wenn es fertig ist.
-
-	Die ursprüngliche GLUT-Bibliothek kehrte nicht zum Programm zurück.
-	Nachdem das Rendern von GLUT abgeschlossen war, wurde das Programm beendet.
-	Dies bedeutete, dass wenn Sie Speicher zugewiesen hatten, es keine Möglichkeit gab,
-	Speicherlecks zu vermeiden, wenn Sie nicht in die GLUT-Bibliothek gehackt wurden.
-	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE,GLUT_ACTION_GLUTMAINLOOP_RETURNS	);*/
-
-	/*Fenster und damit unseren Rendering-Kontext erstellen*/
-	glutCreateWindow(WINDOW_TITLE_PREFIX);  // Fenster erstellen: "Praktikum Komputergrafik: Aufgabeblatt 3"
-	glutID = glutGetWindow();				// glutID->window handle created by FreeGLUT
-
-	if (glutID < 1)
-	{
-		fprintf(stderr, "ERROR: Could not create a new rendering window.\n");
-		exit(EXIT_FAILURE);
-	}
-
-	// GLEW: opengl -Erweiterungen laden!
-	glewExperimental = GL_TRUE;
-
-	// Um OpenGL 4.0-Funktionen unterstützen zu können, benötigt unser Programm Hilfe von der GLEW-Bibliothek!!!
-	GLenum GlewInitResult = glewInit();	// GLEW - Werkzeuge (!) aktivieren
-
-	if (GlewInitResult != GLEW_OK)
-	{
-		/*Wenn dies nicht der Fall ist, schreiben wir eine Fehlernachricht in die Befehlszeile und
-		beenden das Programm. Die Fehlernachricht enthält den tatsächlichen Fehler,
-		der von GLEW durch den Funktionsaufruf "glewGetErrorString" zurückgegeben wird.*/
-		fprintf(stderr, "ERROR: %s\n", glewGetErrorString(GlewInitResult));
-
-		exit(EXIT_FAILURE);
-	}
-
-	// GLUT: Rückruffunktionen: glutResize(), glutDisplay()  (CALLBACS) für folgende Ereignisse:
-	glutReshapeFunc(glutResize);	// Verändern der Fenstergröße: Funktion zum Umformen wird jedes Mal aufgerufen, wenn die Größe des Fensters geändert wird
-	glutDisplayFunc(glutDisplay);	// Rendern der Szene: Anzeigefunktion wird jedes Mal aufgerufen, wenn die Szene auf den Bildschirm gezeichnet wird.
-									//glutIdleFunc   (glutDisplay); 
-
-									/*Da wir zu diesem Zeitpunkt einen OpenGL-Kontext haben, ist es sicher, OpenGL-Funktionen aufzurufen.
-									Als erstes rufen wir glGetString mit GL_VERSION als Parameter auf,
-									um die erstellte Version des OpenGL-Kontexts abzurufen.*/
-	fprintf(stdout, "INFO: OpenGL Version: %s\n", glGetString(GL_VERSION));
-	///  END Fenster erstellen
-
-	/// ********* Kontext ist gültig und wir sind zum Zeichnen bereit! ********
-
-	// GLUT: Rückruffunktion: glutKeyboardFunc (CALLBAC) für die Tastatur-Ereignisse:
-	glutKeyboardFunc(glutKeyboard);	//	Tastatureingabe wird als CALLBAC vearbeitet!
-									/* Initialisation von VAO (Vertex Array Object)->Erstellen und Verwenden von Vertex-Pufferobjekten -> Vertex Buffer Objects (VBO)
-									Ein Vertex Array Object (oder VAO) ist ein Objekt,
-									das beschreibt, wie die Vertex-Attribute in einem Vertex Buffer Objects Vertex-Puffer-Objekt (VBO) gespeichert werden.
-									Dies bedeutet, dass der VAO nicht das eigentliche Objekt ist, das die Vertexdaten speichert,
-									sondern der Deskriptor der Vertexdaten.
-									*/
-	{
-		GLCODE(bool result = init());
-		if (!result) {
-			release();
-			cout << "FEHLER bei Init VAO!";
-			return -2;
-		}
-	}
-
-	// GLUT: Schleife, bis der Benutzer das Fenster schließt
-	/*das Herz der Anwendung. Diese Funktion wird ausgeführt, solange das Fenster aktiv ist und
-	das Fenster nicht geschlossen wurde.
-	Daraufhin werden Zeichenbefehle ausgegeben und Fensteroperationen ausgeführt.*/
-	glutMainLoop();	// Rendering und Handhabung des Events
-
-					// Räumen bei Beendigung alles auf.
-	release();
-
-	return 0;	// Erfolg, oder ->exit(EXIT_SUCCESS);
+  // GLUT: Loop until the user closes the window
+  // rendering & event handling
+  glutMainLoop ();
+  
+  // Cleanup in destructors:
+  // Objects will be released in ~Object
+  // Shader program will be released in ~GLSLProgram
+  
+  return 0;
 }

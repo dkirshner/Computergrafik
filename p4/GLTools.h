@@ -14,7 +14,40 @@
 
 namespace cg
 {
-/* Method 1: Function called after OpenGL command sequence. */
+	/* Method 1: glDebugMessageCallback in OpenGL context */
+	/*
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(cg::glErrorVerboseCallback, nullptr);
+    glDebugMessageControl(..);
+	*/
+	inline void APIENTRY glErrorVerboseCallback(GLenum source,
+		GLenum type,
+		GLuint id,
+		GLenum severity,
+		GLsizei length,
+		const GLchar* message,
+		const void* userParam) {
+		static std::map<GLenum, std::string> severityString =
+		{ { GL_DEBUG_SEVERITY_LOW,  "LOW" },
+		{ GL_DEBUG_SEVERITY_MEDIUM, "MEDIUM" },
+		{ GL_DEBUG_SEVERITY_HIGH,   "HIGH" }
+		};
+
+		static std::map<GLenum, std::string> errorString =
+		{ { GL_DEBUG_TYPE_ERROR,             "ERROR" },
+		{ GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR, "DEPRECATED_BEHAVIOR" },
+		{ GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR,  "UNDEFINED_BEHAVIOR" },
+		{ GL_DEBUG_TYPE_PORTABILITY,         "PORTABILITY" },
+		{ GL_DEBUG_TYPE_PERFORMANCE,         "PERFORMANCE" },
+		{ GL_DEBUG_TYPE_OTHER,               "OTHER" }
+		};
+
+		// id is GLError-code
+		std::cout << errorString[type] << " (" << severityString[severity] << " priority): " << message << std::endl;
+		std::cout << std::endl;
+	}
+
+/* Method 2: Function called after OpenGL command sequence. */
 /*
  Error output to stream. To be called after OpenGL command sequence!
  */
@@ -28,7 +61,7 @@ inline void glErrorVerbose (std::ostream& os, unsigned linenum, bool stop=false)
   }
 }
 
-/* Method 2: GLException out of macro GLCODE. */
+/* Method 3: GLException out of macro GLCODE. */
 /* 
  GLException
  */

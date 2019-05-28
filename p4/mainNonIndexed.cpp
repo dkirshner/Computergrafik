@@ -29,41 +29,49 @@ float zFar  = 100.0f;
 /*
  Struct to hold data for object rendering.
 */
-struct Object
+class Object
 {
-	/* IDs for several buffers. */
-	GLuint vao;
+public:
+  inline Object ()
+    : vao(0),
+      positionBuffer(0),
+      colorBuffer(0),
+      indexBuffer(0)
+  {}
 
-	GLuint positionBuffer;
-	GLuint colorBuffer;
+  inline ~Object () { // GL context must exist on destruction
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &indexBuffer);
+    glDeleteBuffers(1, &colorBuffer);
+    glDeleteBuffers(1, &positionBuffer);
+  }
 
-	GLuint indexBuffer;
-
-	/* Model matrix */
-	glm::mat4x4 model;
+  GLuint vao;        // vertex-array-object ID
+  
+  GLuint positionBuffer; // ID of vertex-buffer: position
+  GLuint colorBuffer;    // ID of vertex-buffer: color
+  
+  GLuint indexBuffer;    // ID of index-buffer
+  
+  glm::mat4x4 model; // model matrix
 };
 
 Object triangle;
 Object quad;
 
-void renderCircle()
-{
-
-}
-
 void renderTriangle()
 {
-	// Create mvp.
-	glm::mat4x4 mvp = projection * view * triangle.model;
-
-	// Bind the shader program and set uniform(s).
-	program.use();
-	program.setUniform("mvp", mvp);
-
-	// Bind vertex array object so we can render the 1 triangle.
-	glBindVertexArray(triangle.vao);
-	glDrawArrays(GL_TRIANGLES, 0, 3); // offset, size
-	glBindVertexArray(0);
+  // Create mvp.
+  glm::mat4x4 mvp = projection * view * triangle.model;
+  
+  // Bind the shader program and set uniform(s).
+  program.use();
+  program.setUniform("mvp", mvp);
+  
+  // Bind vertex array object so we can render the 1 triangle.
+  glBindVertexArray(triangle.vao);
+  glDrawArrays(GL_TRIANGLES, 0, 3); // offset, size
+  glBindVertexArray(0);
 }
 
 void renderQuad()
@@ -212,26 +220,6 @@ bool init()
 }
 
 /*
- Release object resources.
-*/
-void releaseObject(Object& obj)
-{
-	glDeleteVertexArrays(1, &obj.vao);
-	glDeleteBuffers(1, &obj.colorBuffer);
-	glDeleteBuffers(1, &obj.positionBuffer);
-}
-
-/*
- Release resources on termination.
- */
-void release()
-{
-	// Shader program will be released upon program termination.
-	releaseObject(triangle);
-	releaseObject(quad);
-}
-
-/*
  Rendering.
  */
 void render()
@@ -244,7 +232,7 @@ void render()
 
 void glutDisplay ()
 {
-   GLCODE(render());
+   render();
    glutSwapBuffers();
 }
 
@@ -293,50 +281,60 @@ void glutKeyboard (unsigned char keycode, int x, int y)
 
 int main(int argc, char** argv)
 {
-	// GLUT: Initialize freeglut library (window toolkit).
-	glutInitWindowSize    (WINDOW_WIDTH, WINDOW_HEIGHT);
-	glutInitWindowPosition(40,40);
-	glutInit(&argc, argv);
+  // GLUT: Initialize freeglut library (window toolkit).
+  glutInitWindowSize    (WINDOW_WIDTH, WINDOW_HEIGHT);
+  glutInitWindowPosition(40,40);
+  glutInit(&argc, argv);
+  
+  // GLUT: Create a window and opengl context (version 4.4 core profile).
+  glutInitContextVersion(4, 4);
+  glutInitContextFlags  (GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
+  glutInitDisplayMode   (GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
+  
+  glutCreateWindow("Aufgabenblatt 01.0");
+  glutID = glutGetWindow();
+  
+  // GLEW: Load opengl extensions
+  //glewExperimental = GL_TRUE;
+  if (glewInit() != GLEW_OK) {
+    return -1;
+  }
+#if _DEBUG
+  if (glDebugMessageCallback) {
+    std::cout << "Register OpenGL debug callback " << std::endl;
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(cg::glErrorVerboseCallback, nullptr);
+    glDebugMessageControl(GL_DONT_CARE,
+			  GL_DONT_CARE,
+			  GL_DONT_CARE,
+			  0,
+			  nullptr,
+			  true); // get all debug messages
+  } else {
+    std::cout << "glDebugMessageCallback not available" << std::endl;
+  }
+#endif
 
-	// GLUT: Create a window and opengl context (version 4.4 core profile).
-	glutInitContextVersion(4, 4);
-	glutInitContextFlags  (GLUT_FORWARD_COMPATIBLE | GLUT_DEBUG);
-	glutInitDisplayMode   (GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-
-	glutCreateWindow("Aufgabenblatt 01.0");
-	glutID = glutGetWindow();
-	  
-	// GLEW: Load opengl extensions
-	glewExperimental = GL_TRUE;
-	GLenum result = glewInit();
-
-	if (result != GLEW_OK) {
-	   return -1;
-	}
-
-	// GLUT: Set callbacks for events.
-	glutReshapeFunc(glutResize);
-	glutDisplayFunc(glutDisplay);
-	glutIdleFunc   (glutDisplay); // repaint when idle
-
-	glutKeyboardFunc(glutKeyboard);
-
-	// Init VAO.
-	{
-		GLCODE(bool result = init());
-		if (!result)
-		{
-			release();
-			return -2;
-		}
-	}
-
-	// GLUT: Loop until the user closes the window
-	// rendering & event polling
-	glutMainLoop ();
-
-	// Clean up everything on termination.
-	release();
-
-	return 0;
+  // GLUT: Set callbacks for events.
+  glutReshapeFunc(glutResize);
+  glutDisplayFunc(glutDisplay);
+  glutIdleFunc   (glutDisplay); // repaint when idle
+  
+  glutKeyboardFunc(glutKeyboard);
+  
+  // Init VAO.
+  bool result = init();
+  if (!result) {
+    return -2;
+  }
+  
+  // GLUT: Loop until the user closes the window
+  // rendering & event polling
+  glutMainLoop ();
+  
+  // Cleanup in destructors:
+  // Objects will be released in ~Object
+  // Shader program will be released in ~GLSLProgram
+  
+  return 0;
 }
